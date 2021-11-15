@@ -1,7 +1,7 @@
-import { ExtensionContext } from "vscode";
+import { commands, ExtensionContext } from "vscode";
 
 export function activate(context: ExtensionContext) {
-	
+
 }
 
-export function deactivate() {}
+export function deactivate() { }

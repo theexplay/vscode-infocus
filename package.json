@@ -7,12 +7,84 @@
 		"vscode": "^1.62.0"
 	},
 	"categories": [
+		"Todoist",
+		"Notes",
+		"Todo",
 		"Other"
 	],
 	"activationEvents": [
+		"onView:infocus-todoist-sidebar"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "infocus-sidebar-container",
+					"title": "InFocus Explorer",
+					"icon": "media/inFocusLogo.svg"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "infocus-todoist-sidebar",
+				"contents": "No projects list found.\n[Add project](command:<todo:здесь_будет_команда_добавления_проекта_и_или_создания_элемента>)",
+				"when": "!!infocus.todoist.token"
+			},
+			{
+				"view": "infocus-todoist-sidebar",
+				"contents": "Set the token to get started.\n[Set Token](command:workbench.action.openSettings2?infocus.todoist.token)",
+				"when": "!infocus.todoist.token"
+			},
+		],
+		"views": {
+			"infocus-sidebar-container": [
+				{
+					"id": "infocus-todoist-sidebar",
+					"name": "Todoist"
+				},
+				{
+					"id": "infocus-notion-sidebar",
+					"name": "Notion",
+					"when": "config.infocus.notion.enabled"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "infocus-command-todoist-toggleTodo",
+				"title": "Toggle Todo",
+				"category": "InFocus",
+				"icon": "$(check)"
+			},
+			{
+				"command": "infocus-open-settings",
+				"title": "Open Settings"
+			}
+		],
+		"menus": {
+			"view/item/context": [
+				{
+					"command": "infocus-command-todoist-toggleTodo",
+					"group": "inline",
+					"when": "viewItem == taskitem"
+				}
+			]
+		},
+		"configuration": {
+			"title": "InFocus",
+			"properties": {
+				"infocus.todoist.token": {
+					"type": "string",
+					"description": "Your Todoist API Token"
+				},
+				"infocus.notion.enabled": {
+					"type": "boolean",
+					"description": "Enable notion tree view. Reload requires after toggle."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",

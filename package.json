@@ -13,7 +13,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:infocus-todoist-sidebar"
+		"onView:infocus.todoist.TreeView"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -28,24 +28,24 @@
 		},
 		"viewsWelcome": [
 			{
-				"view": "infocus-todoist-sidebar",
+				"view": "infocus.todoist.TreeView",
 				"contents": "No projects list found.\n[Add project](command:<todo:здесь_будет_команда_добавления_проекта_и_или_создания_элемента>)",
-				"when": "!!infocus.todoist.token"
+				"when": "!!config.infocus.todoist.token"
 			},
 			{
-				"view": "infocus-todoist-sidebar",
+				"view": "infocus.todoist.TreeView",
 				"contents": "Set the token to get started.\n[Set Token](command:workbench.action.openSettings2?infocus.todoist.token)",
-				"when": "!infocus.todoist.token"
-			},
+				"when": "!config.infocus.todoist.token"
+			}
 		],
 		"views": {
 			"infocus-sidebar-container": [
 				{
-					"id": "infocus-todoist-sidebar",
+					"id": "infocus.todoist.TreeView",
 					"name": "Todoist"
 				},
 				{
-					"id": "infocus-notion-sidebar",
+					"id": "infocus.notion.TreeView",
 					"name": "Notion",
 					"when": "config.infocus.notion.enabled"
 				}
@@ -53,20 +53,42 @@
 		},
 		"commands": [
 			{
-				"command": "infocus-command-todoist-toggleTodo",
-				"title": "Toggle Todo",
+				"command": "infocus-open-settings",
+				"title": "Open Settings"
+			},
+			{
+				"command": "infocus.todoist.toggleTask",
+				"title": "Toggle Task",
 				"category": "InFocus",
 				"icon": "$(check)"
 			},
 			{
-				"command": "infocus-open-settings",
-				"title": "Open Settings"
+				"command": "infocus.todoist.editTask",
+				"title": "Edit Task",
+				"category": "InFocus",
+				"icon": "$(edit)"
+			},
+			{
+				"command": "infocus.todoist.deleteTask",
+				"title": "Delete Task",
+				"category": "InFocus",
+				"icon": "$(trash)"
 			}
 		],
 		"menus": {
 			"view/item/context": [
 				{
-					"command": "infocus-command-todoist-toggleTodo",
+					"command": "infocus.todoist.toggleTask",
+					"group": "inline",
+					"when": "viewItem == taskitem"
+				},
+				{
+					"command": "infocus.todoist.editTask",
+					"group": "inline",
+					"when": "viewItem == taskitem"
+				},
+				{
+					"command": "infocus.todoist.deleteTask",
 					"group": "inline",
 					"when": "viewItem == taskitem"
 				}

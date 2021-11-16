@@ -1,3 +1,12 @@
+# Dev Roadmap
+* todoist get projects, todos, notes to show
+* adding todos
+* removing todos
+* toggling todos
+* todoist create web view for notes??? 
+* todoist create scheduler
+* 
+
 ### вызов команды и создание через js api
 ```
 context.subscriptions.push(commands.registerCommand('infocus-open-settings', () => {

@@ -29,9 +29,10 @@ export const $tasks = createStore<Task[]>([])
     .on(addTasks, (state, todos) => [...state, ...todos])
     .on(updateTask, (state, todo) => {
         const index = state.findIndex((task) => task.id === todo.id);
-        const updatedTask = state.splice(index, 1)
 
-        return [...state, ...updatedTask]
+        state.splice(index, 1)
+
+        return [...state, todo]
     })
     .on(toggleTask.doneData, (state, id) => {
         const index = state.findIndex((task) => task.id === id);

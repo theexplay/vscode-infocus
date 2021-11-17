@@ -124,6 +124,7 @@
 		"@types/mocha": "^8.2.2",
 		"@types/node": "14.x",
 		"@types/qs": "^6.9.7",
+		"@types/uuid": "^8.3.1",
 		"@types/vscode": "^1.62.0",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
@@ -139,6 +140,7 @@
 	"dependencies": {
 		"axios": "^0.24.0",
 		"effector": "^22.1.2",
-		"qs": "^6.10.1"
+		"qs": "^6.10.1",
+		"uuid": "^8.3.2"
 	}
 }

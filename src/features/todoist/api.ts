@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { v4 } from "uuid";
 import { Project, Task, Note } from "../../entities/todoist";
 import { Integration } from "../../lib/constants";
 import { getApiToken } from "../../lib/tokenService";
@@ -8,6 +9,11 @@ interface SyncResponse {
     projects: Project[];
     notes: Note[];
     project_notes: Note[];
+}
+
+enum TodoistApiCommandType {
+    ItemComplete = 'item_complete',
+    ItemUncomplete = 'item_uncomplete',
 }
 
 class ApiClient {
@@ -85,6 +91,20 @@ class ApiClient {
             projects,
             project_notes
         }
+    }
+
+    async toggleTask(id: number, completed: boolean) {
+        return this.axiosInstance.post<SyncResponse>(this.commonUri, {
+            commands: [
+                {
+                    type: completed ? TodoistApiCommandType.ItemUncomplete : TodoistApiCommandType.ItemComplete,
+                    uuid: v4(),
+                    args: {
+                        id,
+                    }
+                }
+            ]
+        });
     }
 }
 

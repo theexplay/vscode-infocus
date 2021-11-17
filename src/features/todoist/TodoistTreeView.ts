@@ -1,9 +1,7 @@
 
 import { TreeDataProvider, TreeItem, EventEmitter } from 'vscode';
 
-import { apiClient } from './api';
-
-import { $projects, $projectsProvider, addProjects, addTasks, $filterTasksByProjectId } from './model';
+import { $projectsProvider, $filterTasksByProjectId, fetchAllEntities } from './model';
 import { ProjectItem } from './providers/ProjectItem';
 import { TaskItem } from './providers/TaskItem';
 
@@ -23,10 +21,7 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
 
     async getChildren(element?: TodoistProviderItem): Promise<TodoistProviderItem[]> {
         if (!element) {
-            const { items: tasks, projects } = await apiClient.getAllResources();
-
-            addTasks(tasks);
-            addProjects(projects);
+            await fetchAllEntities();
 
             return $projectsProvider.getState();
         } else if (element instanceof ProjectItem) {

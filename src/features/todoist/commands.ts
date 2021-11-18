@@ -6,6 +6,9 @@ import { toggleTask as toggleTaskApi } from "./model";
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
+    commands.registerCommand('infocus.todoist.openTreeView', () => {
+      commands.executeCommand('workbench.view.extension.infocus-sidebar-container');
+    }),
     commands.registerCommand(`infocus.todoist.toggleTask`, toggleTask),
     commands.registerCommand('infocus.todoist.editTask', editTask),
     commands.registerCommand('infocus.todoist.deleteTask', deleteTask),
@@ -17,7 +20,7 @@ async function toggleTask(task: TaskItem): Promise<void> {
 
   // @ts-ignore
   providerStore.get(Integration.todoist).refresh(task);
-  
+
   const progressOptions: ProgressOptions = {
     location: ProgressLocation.Notification,
     title: "Syncing with Todoist",
@@ -29,7 +32,7 @@ async function toggleTask(task: TaskItem): Promise<void> {
 
     await toggleTaskApi(task._raw);
 
-    progress.report({ increment: 70, });    
+    progress.report({ increment: 70, });
   });
 
   setTimeout(async () => {
@@ -43,9 +46,9 @@ async function toggleTask(task: TaskItem): Promise<void> {
 }
 
 async function editTask(task: TaskItem): Promise<void> {
-    
+
 }
 
 async function deleteTask(task: TaskItem): Promise<void> {
-    
+
 }

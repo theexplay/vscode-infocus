@@ -5,3 +5,4 @@ node_modules
 *.vsix
 .history
 .vscode/numbered-bookmarks.json
+.DS_Store

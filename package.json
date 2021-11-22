@@ -75,12 +75,39 @@
 				"icon": "$(trash)"
 			},
 			{
-                "command": "infocus.todoist.openTreeView",
-                "title": "Focus Todoist Sidebar",
-                "icon": "./media/inFocusLogoTouchBar_2.png"
-            }
+				"command": "infocus.todoist.openTreeView",
+				"title": "Focus Todoist Sidebar",
+				"icon": "./media/inFocusLogoTouchBar.png"
+			},
+			{
+				"command": "infocus.todoist.refresh",
+				"title": "Refetch list of tasks",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "infocus.todoist.addTask",
+				"title": "Add new task",
+				"icon": "$(plus)"
+			},
+			{
+				"command": "infocus.todoist.openTaskInBrowser",
+				"title": "Open in browser",
+				"icon": "$(globe)"
+			}
 		],
 		"menus": {
+			"view/title": [
+				{
+					"command": "infocus.todoist.refresh",
+					"when": "view == infocus.todoist.TreeView",
+					"group": "navigation"
+				},
+				{
+					"command": "infocus.todoist.addTask",
+					"when": "view == infocus.todoist.TreeView",
+					"group": "navigation"
+				}
+			],
 			"view/item/context": [
 				{
 					"command": "infocus.todoist.toggleTask",
@@ -94,15 +121,18 @@
 				},
 				{
 					"command": "infocus.todoist.deleteTask",
-					"group": "inline",
+					"when": "viewItem == taskitem"
+				},
+				{
+					"command": "infocus.todoist.openTaskInBrowser",
 					"when": "viewItem == taskitem"
 				}
 			],
 			"touchBar": [
 				{
-                    "command": "infocus.todoist.openTreeView",
+					"command": "infocus.todoist.openTreeView",
 					"group": "infocus.treeview"
-                }
+				}
 			]
 		},
 		"configuration": {
@@ -140,6 +170,7 @@
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
 		"eslint": "^7.27.0",
+		"eslint-plugin-effector": "^0.4.1",
 		"glob": "^7.1.7",
 		"mocha": "^8.4.0",
 		"ts-loader": "^9.2.2",

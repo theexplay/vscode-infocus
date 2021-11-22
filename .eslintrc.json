@@ -6,7 +6,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "effector"
     ],
     "rules": {
         "@typescript-eslint/naming-convention": [
@@ -27,5 +28,6 @@
         "out",
         "dist",
         "**/*.d.ts"
-    ]
+    ],
+    "extends": ["plugin:effector/recommended"]
 }

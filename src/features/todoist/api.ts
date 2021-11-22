@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { v4 } from "uuid";
-import { Project, Task, Note } from "../../entities/todoist";
+import { Project, Task, Note, Section } from "./entities";
 import { Integration } from "../../lib/constants";
 import { getApiToken } from "../../lib/tokenService";
 
@@ -9,12 +9,16 @@ interface SyncResponse {
     projects: Project[];
     notes: Note[];
     project_notes: Note[];
+    sections: Section[];
 }
 
 enum TodoistApiCommandType {
     ItemComplete = 'item_complete',
     ItemUncomplete = 'item_uncomplete',
 }
+
+
+const SYNC_TOKEN_DEFAULT = "*";
 
 class ApiClient {
     private readonly axiosInstance: AxiosInstance;
@@ -29,7 +33,7 @@ class ApiClient {
 
     completedUri = `${this.host}/completed/get_all`;
 
-    sync_token = '*';
+    sync_token = SYNC_TOKEN_DEFAULT;
 
     constructor() {
         this.axiosInstance = axios.create({
@@ -46,7 +50,7 @@ class ApiClient {
                 },
                 params: {
                     ...req.params,
-                    sync_token: this.sync_token
+                    sync_token: req?.params?.sync_token ?? this.sync_token
                 },
             };
         })
@@ -60,17 +64,21 @@ class ApiClient {
         })
     }
 
-    async getAllResources() {
+    async getAllResources(forceUpdate: boolean) {
         const { data } = await this.axiosInstance.post<SyncResponse>(this.commonUri, {
-            resource_types: ["projects", "items", "notes"],
+            resource_types: ["projects", "items", "notes", "sections"],
+            params: {
+                sync_token: forceUpdate ? SYNC_TOKEN_DEFAULT : undefined
+            }
         });
 
-        const { items, projects, notes, project_notes } = data;
+        const { items, projects, notes, project_notes, sections } = data;
 
         return {
             items,
             notes,
             projects,
+            sections,
             project_notes
         }
     }
@@ -93,11 +101,12 @@ class ApiClient {
         }
     }
 
-    async toggleTask(id: number, completed: boolean) {
+    // completed = 1 | 0
+    async toggleTask(id: number, completed: number) {
         return this.axiosInstance.post<SyncResponse>(this.commonUri, {
             commands: [
                 {
-                    type: completed ? TodoistApiCommandType.ItemUncomplete : TodoistApiCommandType.ItemComplete,
+                    type: !!completed ? TodoistApiCommandType.ItemUncomplete : TodoistApiCommandType.ItemComplete,
                     uuid: v4(),
                     args: {
                         id,

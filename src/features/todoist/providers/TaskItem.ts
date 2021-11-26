@@ -12,7 +12,7 @@ export const getTaskIcon = (completed: number) => new ThemeIcon(!!completed ? Ta
 
 export class TaskItem extends TreeItem {
     _raw: Task;
-    contextValue = 'taskitem';
+    contextValue = 'taskItem';
     id: string;
     parentId?: Id;
     projectId: Id;

@@ -4,7 +4,7 @@ import { Project } from "../entities";
 
 export class ProjectItem extends TreeItem {
     _raw: Project;
-    contextValue = 'project';
+    contextValue = 'projectItem';
 
     constructor(project: Project) {
         super(project.name, TreeItemCollapsibleState.Collapsed);

@@ -10,17 +10,18 @@ Roadmap:
 - [x] complete tasks
 - [x] uncomplete tasks
 - [x] open task in browser
-- [] show completed tasks by config option
-- [] full delete task
-- [] (un)complete all subchild tasks
-- [] inline edit task content
-- [] inline edit section content
-- [] inline edit project content
-- [] support scheduler tasks
-- [] add todos from code to todoist
-- [] subscribe on events from backend
-- [] offline work
-- [] ...
+- [x] create task
+- [ ] inline edit task content
+- [ ] inline edit section content
+- [ ] inline edit project content
+- [ ] show completed tasks by config option
+- [ ] full delete task
+- [ ] (un)complete all subchild tasks
+- [ ] support scheduler tasks
+- [ ] add todos from code to todoist
+- [ ] subscribe on events from backend
+- [ ] offline work
+- [ ] ...
 
 <!-- ### Notion
 ### Google Keep

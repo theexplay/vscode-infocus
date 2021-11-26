@@ -1,9 +1,11 @@
-import { commands, ExtensionContext, ProgressLocation, ProgressOptions, Uri, window } from "vscode";
+import { commands, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
 import { Integration } from "../../lib/constants";
 import { providerStore } from "../../stores";
 import { TaskItem } from "./providers/TaskItem";
 import { Task } from './entities'
-import { fetchAllEntitiesFx, toggleTaskFx } from "./models";
+import { $projects, addTaskFx, fetchAllEntitiesFx, toggleTaskFx } from "./models";
+import { ProjectItem } from "./providers/ProjectItem";
+import { Id } from "../../lib/listToTree";
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
@@ -57,8 +59,36 @@ async function deleteTask(task: TaskItem): Promise<void> {
 
 }
 
-async function addTask(task: TaskItem): Promise<void> {
+async function addTask(project?: ProjectItem): Promise<void> {
+  const formattedProjects: ({ id: Id } & QuickPickItem)[] = $projects.getState().map((project) => ({
+    label: project.name,
+    description: 'some description',
+    id: project.id
+  }));
 
+  const selectedProject = project ?? await window.showQuickPick(formattedProjects, {
+    title: 'Select a project where to create a task',
+  });
+
+  if (selectedProject) {
+    const task = await window.showInputBox({
+      title: `Creating task in project: ${selectedProject.label}`,
+      placeHolder: 'Task name',
+    });
+
+    if (task?.trim()) {
+      await window.withProgress(progressOptions, async (progress) => {
+        progress.report({ increment: 30 });
+
+        await addTaskFx({
+          content: task,
+          project_id: selectedProject.id
+        })
+
+        progress.report({ increment: 70, });
+      });
+    }
+  }
 }
 
 async function openInBrowser(task: TaskItem): Promise<void> {

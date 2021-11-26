@@ -110,22 +110,27 @@
 			],
 			"view/item/context": [
 				{
+					"command": "infocus.todoist.addTask",
+					"group": "inline",
+					"when": "viewItem == projectItem"
+				},
+				{
 					"command": "infocus.todoist.toggleTask",
 					"group": "inline",
-					"when": "viewItem == taskitem"
+					"when": "viewItem == taskItem"
 				},
 				{
 					"command": "infocus.todoist.editTask",
 					"group": "inline",
-					"when": "viewItem == taskitem"
+					"when": "viewItem == taskItem"
 				},
 				{
 					"command": "infocus.todoist.deleteTask",
-					"when": "viewItem == taskitem"
+					"when": "viewItem == taskItem"
 				},
 				{
 					"command": "infocus.todoist.openTaskInBrowser",
-					"when": "viewItem == taskitem"
+					"when": "viewItem == taskItem"
 				}
 			],
 			"touchBar": [
@@ -183,6 +188,7 @@
 		"axios": "^0.24.0",
 		"effector": "^22.1.2",
 		"qs": "^6.10.1",
+		"todoist": "^0.5.1",
 		"uuid": "^8.3.2"
 	}
 }

@@ -3,6 +3,11 @@ import { v4 } from "uuid";
 import { Project, Task, Note, Section } from "./entities";
 import { Integration } from "../../lib/constants";
 import { getApiToken } from "../../lib/tokenService";
+import { Id } from "../../lib/listToTree";
+import { v8 as TodoistApi } from 'todoist';
+
+// TODO: migrate to api from todoist https://github.com/romgrk/node-todoist/issues/26
+export const todoistApi = TodoistApi(getApiToken(Integration.todoist)!);
 
 interface SyncResponse {
     items: Task[];
@@ -15,6 +20,7 @@ interface SyncResponse {
 enum TodoistApiCommandType {
     ItemComplete = 'item_complete',
     ItemUncomplete = 'item_uncomplete',
+    ItemAdd = 'item_add',
 }
 
 

@@ -11,7 +11,7 @@ Roadmap:
 - [x] uncomplete tasks
 - [x] open task in browser
 - [x] create task
-- [ ] inline edit task content
+- [x] inline edit task content
 - [ ] inline edit section content
 - [ ] inline edit project content
 - [ ] show completed tasks by config option

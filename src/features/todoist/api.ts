@@ -21,6 +21,7 @@ enum TodoistApiCommandType {
     ItemComplete = 'item_complete',
     ItemUncomplete = 'item_uncomplete',
     ItemAdd = 'item_add',
+    ItemUpdate = 'item_update',
 }
 
 
@@ -121,6 +122,7 @@ class ApiClient {
             ]
         });
     }
+
 }
 
 export const apiClient = new ApiClient();

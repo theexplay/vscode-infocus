@@ -1,6 +1,6 @@
 import { ExtensionContext, TreeDataProvider, window } from "vscode";
 import { TodoistTreeView, registerTodoistCommands } from "./features/todoist";
-import { fetchAllEntitiesFx } from "./features/todoist/models";
+import { sync } from "./features/todoist/models";
 import { ExtensionName, Integration, View, ViewId } from "./lib/constants";
 import { treeViewStore, providerStore } from "./stores";
 
@@ -37,5 +37,5 @@ function registerProvider<T>({ name, viewType, provider }: registerProviderOptio
 }
 
 async function initialize() {
-    await fetchAllEntitiesFx();
+    await sync();
 }

@@ -69,12 +69,6 @@
 				"icon": "$(edit)"
 			},
 			{
-				"command": "infocus.todoist.deleteTask",
-				"title": "Delete Task",
-				"category": "InFocus",
-				"icon": "$(trash)"
-			},
-			{
 				"command": "infocus.todoist.openTreeView",
 				"title": "Focus Todoist Sidebar",
 				"icon": "./media/inFocusLogoTouchBar.png"
@@ -122,10 +116,6 @@
 				{
 					"command": "infocus.todoist.editTask",
 					"group": "inline",
-					"when": "viewItem == taskItem"
-				},
-				{
-					"command": "infocus.todoist.deleteTask",
 					"when": "viewItem == taskItem"
 				},
 				{

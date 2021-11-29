@@ -52,8 +52,8 @@ async function toggleTask(task: TaskItem): Promise<void> {
 
 async function editTask(task: TaskItem): Promise<void> {
   const { project_id, content, id } = task._raw;
-  const projects = $projectsMap.getState()
-  const selectedProject = projects[project_id]
+  const projects = $projectsMap.getState();
+  const selectedProject = projects[project_id];
 
   const newContent = await window.showInputBox({
     title: `Edit task in project: ${selectedProject.name}`,
@@ -61,21 +61,14 @@ async function editTask(task: TaskItem): Promise<void> {
   });
 
   if (newContent) {
-    await window.withProgress(progressOptions, async (progress) => {
-      progress.report({ increment: 30 });
-
-      await updateTaskFx({
+    await withAsyncProgress(
+      progressOptions,
+      updateTaskFx({
         id,
         content: newContent,
-      });
-
-      progress.report({ increment: 70, });
-    });
+      })
+    );
   }
-}
-
-async function deleteTask(task: TaskItem): Promise<void> {
-
 }
 
 async function addTask(project?: ProjectItem): Promise<void> {
@@ -96,16 +89,13 @@ async function addTask(project?: ProjectItem): Promise<void> {
     });
 
     if (task?.trim()) {
-      await window.withProgress(progressOptions, async (progress) => {
-        progress.report({ increment: 30 });
-
-        await addTaskFx({
+      await withAsyncProgress(
+        progressOptions,
+        addTaskFx({
           content: task,
           project_id: selectedProject.id
         })
-
-        progress.report({ increment: 70, });
-      });
+      );
     }
   }
 }
@@ -115,14 +105,8 @@ async function openInBrowser(task: TaskItem): Promise<void> {
 }
 
 async function refresh(): Promise<void> {
-  await window.withProgress(progressOptions, async (progress) => {
-    progress.report({ increment: 30 });
-
-    await sync(true);
-
-    progress.report({ increment: 70, });
-  });
-
-  // @ts-ignore
-  providerStore.get(Integration.todoist).refresh();
+  await withAsyncProgress(
+    progressOptions,
+    sync(true)
+  );
 }

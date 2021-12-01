@@ -25,3 +25,18 @@ context.subscriptions.push(commands.registerCommand('infocus-open-settings', () 
 ```
 vscode.commands.executeCommand('workbench.action.openSettings', '@ext:eliostruyf.vscode-front-matter');
 ```
+
+
+
+### диплинк в vscode
+https://github.com/microsoft/vscode-extension-samples/tree/main/uri-handler-sample
+
+
+vscode://Users/matila/Projects/bots/index2.js
+
+### hover??? action???
+HoverProvider
+
+
+### configuration
+workspace.getConfiguration("extension-name",).get("enableOption", true)

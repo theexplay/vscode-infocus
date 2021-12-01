@@ -6,6 +6,6 @@ export function withAsyncProgress(options: ProgressOptions, cb: Promise<any>) {
 
         await cb;
 
-        progress.report({ increment: 70, });
+        progress.report({ increment: 70 });
     });
 }

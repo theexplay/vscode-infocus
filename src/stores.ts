@@ -1,6 +1,6 @@
 import { TreeDataProvider, TreeView } from "vscode";
 
-export abstract class Store<T> {
+abstract class Store<T> {
   abstract store: Map<string, T>;
   abstract get(name: string): T | undefined;
   abstract add(name: string, value: T): void;

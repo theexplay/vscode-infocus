@@ -1,17 +1,20 @@
-import { ExtensionContext, TreeDataProvider, window } from "vscode";
+import { ExtensionContext, languages, TreeDataProvider, window } from "vscode";
 import { TodoistTreeView, registerTodoistCommands } from "./features/todoist";
 import { sync } from "./features/todoist/models";
+import { TodoistCodelensProvider } from "./features/todoist/providers/TodoistCodelensProvider";
 import { ExtensionName, Integration, View, ViewId } from "./lib/constants";
 import { treeViewStore, providerStore } from "./stores";
 
 export async function activate(context: ExtensionContext) {
     await initialize();
 
-    registerProvider({
+    registerTreeProvider({
         name: Integration.todoist,
         viewType: View.TreeView,
         provider: new TodoistTreeView()
     });
+
+    languages.registerCodeLensProvider("*", new TodoistCodelensProvider());
 
     registerTodoistCommands(context);
 }
@@ -25,7 +28,7 @@ interface registerProviderOptions<T> {
     provider: TreeDataProvider<T>;
 }
 
-function registerProvider<T>({ name, viewType, provider }: registerProviderOptions<T>) {
+function registerTreeProvider<T>({ name, viewType, provider }: registerProviderOptions<T>) {
     const viewId: ViewId = `${ExtensionName}.${name}.${viewType}`;
 
     const treeView = window.createTreeView(viewId, {

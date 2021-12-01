@@ -14,7 +14,6 @@ export function registerTodoistCommands(context: ExtensionContext) {
     }),
     commands.registerCommand(`infocus.todoist.toggleTask`, toggleTask),
     commands.registerCommand('infocus.todoist.editTask', editTask),
-    commands.registerCommand('infocus.todoist.deleteTask', deleteTask),
     commands.registerCommand('infocus.todoist.addTask', addTask),
     commands.registerCommand('infocus.todoist.openTaskInBrowser', openInBrowser),
     commands.registerCommand('infocus.todoist.refresh', refresh),
@@ -71,7 +70,7 @@ async function editTask(task: TaskItem): Promise<void> {
   }
 }
 
-async function addTask(project?: ProjectItem): Promise<void> {
+async function addTask(project?: ProjectItem, taskContent?: string): Promise<void> {
   const formattedProjects: ({ id: Id } & QuickPickItem)[] = $projects.getState().map((project) => ({
     label: project.name,
     description: 'some description',
@@ -86,6 +85,8 @@ async function addTask(project?: ProjectItem): Promise<void> {
     const task = await window.showInputBox({
       title: `Creating task in project: ${selectedProject.label}`,
       placeHolder: 'Task name',
+      value: taskContent,
+      valueSelection: [-1, -1],
     });
 
     if (task?.trim()) {

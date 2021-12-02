@@ -3,12 +3,16 @@
 'use strict';
 
 const path = require('path');
+const { ContextReplacementPlugin } = require('webpack');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
   target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
 	mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
 
+  stats: {
+    errorDetails: true
+  },
   entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
   output: {
     // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
@@ -37,6 +41,9 @@ const config = {
         ]
       }
     ]
-  }
+  },
+  plugins: [
+    new ContextReplacementPlugin(/keyv/),
+  ],
 };
 module.exports = config;

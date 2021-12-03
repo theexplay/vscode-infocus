@@ -1,8 +1,10 @@
-import { ExtensionContext, languages, TreeDataProvider, window } from "vscode";
+import { ExtensionContext, languages, TreeDataProvider, window, workspace } from "vscode";
 import { TodoistTreeView, registerTodoistCommands } from "./features/todoist";
+import { todoistDeactivate, todoistInitialize } from "./features/todoist/init";
 import { syncFx } from "./features/todoist/models";
 import { TodoistCodelensProvider } from "./features/todoist/providers/TodoistCodelensProvider";
 import { ExtensionName, Integration, View, ViewId } from "./lib/constants";
+import { getSyncInterval } from "./lib/settingsHelper";
 import { treeViewStore, providerStore } from "./stores";
 
 export async function activate(context: ExtensionContext) {
@@ -18,8 +20,6 @@ export async function activate(context: ExtensionContext) {
 
     registerTodoistCommands(context);
 }
-
-export function deactivate() { }
 
 /** */
 interface registerProviderOptions<T> {
@@ -38,7 +38,17 @@ function registerTreeProvider<T>({ name, viewType, provider }: registerProviderO
     treeViewStore.add(name, treeView);
     providerStore.add(name, provider);
 }
+workspace.onDidChangeConfiguration(() => {
+    todoistDeactivate();
+    console.log('restart');
+    todoistInitialize();
+});
 
 async function initialize() {
     // todo persist state
+    todoistInitialize();    
+}
+
+export function deactivate() {
+    todoistDeactivate();
 }

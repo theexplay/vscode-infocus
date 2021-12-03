@@ -207,9 +207,11 @@
 					"type": "string",
 					"description": "Your Todoist API Token"
 				},
-				"infocus.notion.enabled": {
-					"type": "boolean",
-					"description": "Enable notion tree view. Reload requires after toggle."
+				"infocus.todoist.syncInternval": {
+					"type": "number",
+					"default": 60,
+					"description": "Value in minutes at which interval Todoist data is synced. If set to 0, interval will not be used. You can steel sync by action from sidebar.",
+					"scope": "application"
 				}
 			}
 		}

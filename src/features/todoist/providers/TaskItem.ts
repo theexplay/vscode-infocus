@@ -28,19 +28,11 @@ export class TaskItem extends TreeItem {
         this._raw = task;
         this.iconPath = getTaskIcon(task.checked);
         this.id = String(task.id);
-        this.description = task.description;
         this.parentId = task.parent_id;
         this.projectId = task.project_id;
         this.sectionId = task.section_id;
         this.completed = task.checked;
         this.children = task.children.map((task) => new TaskItem(task));
-
-        // TODO: сделать открытие TreeView или Webview для отображения подробной информации
-        // this.command = {
-        //     command: "infocus.helloWorld",
-        //     title: '',
-        //     arguments: [task.id]
-        // };
     }
 
     pushTaskToChildrens(task: TaskItem) {

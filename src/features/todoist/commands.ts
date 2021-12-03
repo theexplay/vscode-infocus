@@ -108,6 +108,6 @@ async function openInBrowser(task: TaskItem): Promise<void> {
 async function refresh(): Promise<void> {
   await withAsyncProgress(
     progressOptions,
-    sync(true)
+    sync()
   );
 }

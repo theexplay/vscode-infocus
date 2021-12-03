@@ -14,12 +14,8 @@ Roadmap:
 - [x] inline edit task content
 - [ ] inline edit section content
 - [ ] inline edit project content
-- [ ] show completed tasks by config option
-- [ ] full delete task
-- [ ] (un)complete all subchild tasks
 - [ ] support scheduler tasks
-- [ ] add todos from code to todoist
-- [ ] subscribe on events from backend
+- [x] add todos from code using codelens with vscode deeplink
 - [ ] offline work
 - [ ] ...
 

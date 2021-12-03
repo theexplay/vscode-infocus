@@ -1,12 +1,12 @@
 import { createEffect } from "effector";
-import { apiClient } from "../api";
+import { todoistApi } from "../api";
 
-export const sync = createEffect(async (forceUpdate: boolean = false) => {
-    const { items: tasks, projects, sections } = await apiClient.getAllResources(forceUpdate);
+export const sync = createEffect(async () => {
+    await todoistApi.sync();
 
     return {
-        tasks,
-        projects,
-        sections,
+        tasks: todoistApi.items.get(),
+        projects: todoistApi.projects.get(),
+        sections: todoistApi.sections.get(),
     }
 });

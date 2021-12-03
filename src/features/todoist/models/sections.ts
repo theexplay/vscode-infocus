@@ -11,7 +11,7 @@ export const $sections = createStore<Section[]>([]);
 export const $sectionsProvider = $sections.map((sections) => sections.map((section) => new SectionItem(section)));
 
 $sections
-    .on(sync.doneData, (state, { sections }) => [...state, ...sections]);
+    .on(sync.doneData, (_, { sections }) => [...sections]);
 
 
 export const $filterSectionsByProjectId = (projectId: Id) => $sectionsProvider.map(

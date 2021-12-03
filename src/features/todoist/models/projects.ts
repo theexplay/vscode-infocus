@@ -16,4 +16,6 @@ export const $projectsMap = $projects.map((projects) => projects.reduce<Record<I
 }), {}));
 
 $projects
-    .on(sync.doneData, (state, { projects }) => [...state, ...projects]);
+    .on(sync.doneData, (_, { projects }) => {
+        return [...projects];
+    });

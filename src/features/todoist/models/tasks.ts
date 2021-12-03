@@ -38,7 +38,7 @@ export const $filterTasksBySectionId = (sectionId: Id) => $tasksTreeLeaf.map(
 
 /** Subscriptions */
 $tasks
-    .on(sync.doneData, (state, { tasks }) => [...state, ...tasks])
+    .on(sync.doneData, (_, { tasks }) => [...tasks])
 
 merge([
     uncompleteTaskFx.done,

@@ -10,7 +10,7 @@ export class TodoistCodelensProvider implements CodeLensProvider {
     public readonly onDidChangeCodeLenses: Event<void> = this._onDidChangeCodeLenses.event;
 
     constructor() {
-        this.regex = /((todo|fixme)(.+))/gi;
+        this.regex = /(todo|fixme)(.+)/gi;
 
         workspace.onDidChangeConfiguration((_) => {
             this._onDidChangeCodeLenses.fire();
@@ -33,7 +33,7 @@ export class TodoistCodelensProvider implements CodeLensProvider {
                 this.codeLenses.push(new CodeLens(range, {
                     title: "Add to InFocus todos?",
                     command: "infocus.todoist.addTask",
-                    arguments: [undefined, `${line.text.replace(this.regex, '$3')} ${env.uriScheme}://file${document.uri.path}:${line.lineNumber}`]
+                    arguments: [undefined, `${matches[matches.length - 1].trim()} ${env.uriScheme}://file${document.uri.path}:${line.lineNumber}`]
                 }));
             }
         }

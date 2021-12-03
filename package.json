@@ -54,6 +54,7 @@
 		"commands": [
 			{
 				"command": "infocus-open-settings",
+				"category": "InFocus",
 				"title": "Open Settings"
 			},
 			{
@@ -71,25 +72,55 @@
 			{
 				"command": "infocus.todoist.openTreeView",
 				"title": "Focus Todoist Sidebar",
+				"category": "InFocus",
 				"icon": "./media/inFocusLogoTouchBar.png"
 			},
 			{
 				"command": "infocus.todoist.refresh",
-				"title": "Refetch list of tasks",
+				"title": "Refresh tasks",
+				"category": "InFocus",
 				"icon": "$(refresh)"
 			},
 			{
 				"command": "infocus.todoist.addTask",
 				"title": "Add new task",
+				"category": "InFocus",
 				"icon": "$(plus)"
 			},
 			{
 				"command": "infocus.todoist.openTaskInBrowser",
 				"title": "Open in browser",
+				"category": "InFocus",
 				"icon": "$(globe)"
 			}
 		],
 		"menus": {
+			"commandPalette": [
+				{
+					"command": "infocus.todoist.openTaskInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.openTaskInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "infocus-open-settings",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.toggleTask",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.editTask",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.openTreeView",
+					"when": "false"
+				}
+			],
 			"view/title": [
 				{
 					"command": "infocus.todoist.refresh",
@@ -126,7 +157,7 @@
 			"touchBar": [
 				{
 					"command": "infocus.todoist.openTreeView",
-					"group": "infocus.treeview"
+					"group": "infocus.treeview.touchBar"
 				}
 			]
 		},

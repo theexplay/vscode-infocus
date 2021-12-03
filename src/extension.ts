@@ -1,6 +1,6 @@
 import { ExtensionContext, languages, TreeDataProvider, window } from "vscode";
 import { TodoistTreeView, registerTodoistCommands } from "./features/todoist";
-import { sync } from "./features/todoist/models";
+import { syncFx } from "./features/todoist/models";
 import { TodoistCodelensProvider } from "./features/todoist/providers/TodoistCodelensProvider";
 import { ExtensionName, Integration, View, ViewId } from "./lib/constants";
 import { treeViewStore, providerStore } from "./stores";
@@ -40,5 +40,5 @@ function registerTreeProvider<T>({ name, viewType, provider }: registerProviderO
 }
 
 async function initialize() {
-    await sync();
+    // todo persist state
 }

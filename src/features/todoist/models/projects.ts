@@ -2,20 +2,29 @@ import { createStore } from "effector";
 import { Id } from "../../../lib/listToTree";
 import { Project } from "../entities";
 import { ProjectItem } from "../providers/ProjectItem";
-import { sync } from "./common";
+import { syncFx } from "./common";
+import { $tasks } from "./tasks";
 
 /** Stores */
 export const $projects = createStore<Project[]>([]);
 
 /** Computed stores */
 export const $projectsProvider = $projects.map((projects) => projects.map((project) => new ProjectItem(project)));
+export const $projectsProviderMap = $projectsProvider.map((projects) => projects.reduce<Record<Id, ProjectItem>>((acc, project) => ({
+    ...acc,
+    [project.id]: project
+}), {}));
 
 export const $projectsMap = $projects.map((projects) => projects.reduce<Record<Id, Project>>((acc, project) => ({
     ...acc,
     [project.id]: project
 }), {}));
 
+export const hasProjectItems = (projectId: number) => $tasks.map((tasks) =>
+    tasks.some(({ project_id }) => project_id === projectId)
+);
+
 $projects
-    .on(sync.doneData, (_, { projects }) => {
+    .on(syncFx.doneData, (_, { projects }) => {
         return [...projects];
     });

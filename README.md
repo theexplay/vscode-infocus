@@ -2,8 +2,7 @@
 
 <img src="media/features/common.gif" width="400" >
 
-Roadmap:
-### Todoist
+### Todoist roadmap/ideas
 - [x] get projects
 - [x] get sections
 - [x] get tasks
@@ -12,11 +11,12 @@ Roadmap:
 - [x] open task in browser
 - [x] create task
 - [x] inline edit task content
-- [ ] inline edit section content
-- [ ] inline edit project content
+- [x] inline edit section content
 - [ ] support scheduler tasks
 - [x] add todos from code using codelens with vscode deeplink
 - [ ] offline work
+- [ ] save ui state, like opened project
+- [ ] pin project to top
 - [ ] ...
 
 <!-- ### Notion

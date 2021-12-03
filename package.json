@@ -29,7 +29,7 @@
 		"viewsWelcome": [
 			{
 				"view": "infocus.todoist.TreeView",
-				"contents": "No projects list found.\n[Add project](command:<todo:здесь_будет_команда_добавления_проекта_и_или_создания_элемента>)",
+				"contents": "Data is loading, be patience.\n ------ \n Click refresh in toolbar to resync.",
 				"when": "!!config.infocus.todoist.token"
 			},
 			{
@@ -92,6 +92,23 @@
 				"title": "Open in browser",
 				"category": "InFocus",
 				"icon": "$(globe)"
+			},
+			{
+				"command": "infocus.todoist.sectionRename",
+				"title": "Rename section",
+				"category": "InFocus",
+				"icon": "$(edit)"
+			},
+			{
+				"command": "infocus.todoist.sectionAddTask",
+				"title": "Add task to section",
+				"category": "InFocus",
+				"icon": "$(plus)"
+			},
+			{
+				"command": "infocus.todoist.openTextDocument",
+				"title": "Open Text Document",
+				"category": "InFocus"
 			}
 		],
 		"menus": {
@@ -101,7 +118,19 @@
 					"when": "false"
 				},
 				{
+					"command": "infocus.todoist.openTextDocument",
+					"when": "false"
+				},
+				{
 					"command": "infocus.todoist.openTaskInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.sectionRename",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.sectionAddTask",
 					"when": "false"
 				},
 				{
@@ -125,12 +154,12 @@
 				{
 					"command": "infocus.todoist.refresh",
 					"when": "view == infocus.todoist.TreeView",
-					"group": "navigation"
+					"group": "navigation@1"
 				},
 				{
 					"command": "infocus.todoist.addTask",
 					"when": "view == infocus.todoist.TreeView",
-					"group": "navigation"
+					"group": "navigation@2"
 				}
 			],
 			"view/item/context": [
@@ -152,6 +181,16 @@
 				{
 					"command": "infocus.todoist.openTaskInBrowser",
 					"when": "viewItem == taskItem"
+				},
+				{
+					"command": "infocus.todoist.sectionRename",
+					"when": "viewItem == sectionItem",
+					"group": "inline@1"
+				},
+				{
+					"command": "infocus.todoist.sectionAddTask",
+					"when": "viewItem == sectionItem",
+					"group": "inline@2"
 				}
 			],
 			"touchBar": [

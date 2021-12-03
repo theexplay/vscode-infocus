@@ -4,7 +4,7 @@ import { Task } from "../entities";
 import { listToTree, Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
 import { TaskItem } from "../providers/TaskItem";
-import { sync } from "./common";
+import { syncFx } from "./common";
 
 /** Effects */
 export const completeTaskFx = createEffect(async ({ id }: Task) => todoistApi.items.complete({ id }));
@@ -38,7 +38,7 @@ export const $filterTasksBySectionId = (sectionId: Id) => $tasksTreeLeaf.map(
 
 /** Subscriptions */
 $tasks
-    .on(sync.doneData, (_, { tasks }) => [...tasks])
+    .on(syncFx.doneData, (_, { tasks }) => [...tasks])
 
 merge([
     uncompleteTaskFx.done,
@@ -46,5 +46,5 @@ merge([
     addTaskFx.done,
     updateTaskFx.done,
 ]).watch(async () => {
-    await sync();
+    await syncFx();
 })

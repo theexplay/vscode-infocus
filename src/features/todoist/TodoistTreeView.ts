@@ -1,5 +1,5 @@
 import { TreeDataProvider, TreeItem, EventEmitter } from 'vscode';
-import { $tasksTreeLeaf, $projectsProvider, $filterTasksByProjectIdWithoutSectionId, $filterSectionsByProjectId, $filterTasksBySectionId } from './models';
+import { $tasksTreeLeaf, $projectsProvider, $filterTasksByProjectIdWithoutSectionId, $filterSectionsByProjectId, $filterTasksBySectionId, syncFx } from './models';
 
 import { ProjectItem } from './providers/ProjectItem';
 import { SectionItem } from './providers/SectionItem';
@@ -11,10 +11,14 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
 
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
+    syncInitialPromise: Promise<any>;
+
     constructor() {
+        this.syncInitialPromise = syncFx(['projects', 'sections', 'items']);
+
         $tasksTreeLeaf.watch(() => {
             this.refresh();
-        })
+        });
     }
 
     refresh(element?: TodoistProviderItem): void {
@@ -27,6 +31,9 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
 
     async getChildren(element?: TodoistProviderItem): Promise<TodoistProviderItem[]> {
         if (!element) {
+            // Чтобы показать лоадер в TreeView
+            await this.syncInitialPromise;
+
             return $projectsProvider.getState();
         } else if (element instanceof ProjectItem) {
             const sections = $filterSectionsByProjectId(element._raw.id).getState().sort((a, b) => a._raw.section_order - b._raw.section_order);

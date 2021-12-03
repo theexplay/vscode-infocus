@@ -1,11 +1,12 @@
-import { commands, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
+import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window, workspace } from "vscode";
 import { Integration } from "../../lib/constants";
 import { providerStore } from "../../stores";
 import { TaskItem } from "./providers/TaskItem";
-import { $projects, $projectsMap, addTaskFx, sync, completeTaskFx, updateTaskFx, uncompleteTaskFx } from "./models";
+import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";
 import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
+import { SectionItem } from "./providers/SectionItem";
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
@@ -17,6 +18,9 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.addTask', addTask),
     commands.registerCommand('infocus.todoist.openTaskInBrowser', openInBrowser),
     commands.registerCommand('infocus.todoist.refresh', refresh),
+    commands.registerCommand('infocus.todoist.sectionRename', sectionRename),
+    commands.registerCommand('infocus.todoist.sectionAddTask', sectionAddTask),
+    commands.registerCommand('infocus.todoist.openTextDocument', openTextDocument),
   );
 }
 
@@ -56,7 +60,8 @@ async function editTask(task: TaskItem): Promise<void> {
 
   const newContent = await window.showInputBox({
     title: `Edit task in project: ${selectedProject.name}`,
-    value: content
+    value: content,
+    valueSelection: [-1, -1],
   });
 
   if (newContent) {
@@ -70,7 +75,7 @@ async function editTask(task: TaskItem): Promise<void> {
   }
 }
 
-async function addTask(project?: ProjectItem, taskContent?: string): Promise<void> {
+async function addTask(project?: ProjectItem, taskContent?: string, section?: SectionItem): Promise<void> {
   const formattedProjects: ({ id: Id } & QuickPickItem)[] = $projects.getState().map((project) => ({
     label: project.name,
     description: 'some description',
@@ -83,7 +88,7 @@ async function addTask(project?: ProjectItem, taskContent?: string): Promise<voi
 
   if (selectedProject) {
     const task = await window.showInputBox({
-      title: `Creating task in project: ${selectedProject.label}`,
+      title: `To create task in project: ${selectedProject.label}. ${section ? `In section: ${section.label}` : ''}`,
       placeHolder: 'Task name',
       value: taskContent,
       valueSelection: [-1, -1],
@@ -94,7 +99,8 @@ async function addTask(project?: ProjectItem, taskContent?: string): Promise<voi
         progressOptions,
         addTaskFx({
           content: task,
-          project_id: selectedProject.id
+          project_id: selectedProject.id,
+          section_id: section?._raw.id ?? undefined
         })
       );
     }
@@ -108,6 +114,37 @@ async function openInBrowser(task: TaskItem): Promise<void> {
 async function refresh(): Promise<void> {
   await withAsyncProgress(
     progressOptions,
-    sync()
+    syncFx()
   );
+}
+
+
+async function sectionRename(section: SectionItem) {
+  const sectionName = await window.showInputBox({
+    title: `Editing section:`,
+    placeHolder: 'Section name',
+    value: section._raw.name,
+    valueSelection: [-1, -1],
+  });
+
+  if (sectionName) {
+    await withAsyncProgress(
+      progressOptions,
+      updateSectionFx({
+        // @ts-ignore
+        id: section._raw.id,
+        name: sectionName
+      })
+    );
+  }
+}
+
+async function sectionAddTask(section: SectionItem) {
+  const { project_id } = section._raw;
+  const project = $projectsProviderMap.getState()[project_id];
+  addTask(project, undefined, section);
+}
+
+async function openTextDocument(uri: Uri) {
+  env.openExternal(uri);
 }

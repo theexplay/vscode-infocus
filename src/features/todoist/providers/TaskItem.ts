@@ -1,4 +1,4 @@
-import { TreeItem, TreeItemCollapsibleState, ThemeIcon } from "vscode";
+import { TreeItem, TreeItemCollapsibleState, ThemeIcon, Uri } from "vscode";
 import { Task } from "../entities";
 import { Id } from "../../../lib/listToTree";
 import { WithChildren } from "../../../lib/types";
@@ -23,7 +23,7 @@ export class TaskItem extends TreeItem {
     constructor(
         task: WithChildren<Task>
     ) {
-        super(task.content, task.children.length ? TreeItemCollapsibleState.Expanded : TreeItemCollapsibleState.None);
+        super(task.content, task.children.length ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None);
 
         this._raw = task;
         this.iconPath = getTaskIcon(task.checked);
@@ -33,6 +33,18 @@ export class TaskItem extends TreeItem {
         this.sectionId = task.section_id;
         this.completed = task.checked;
         this.children = task.children.map((task) => new TaskItem(task));
+
+        const match = task.content.match(/(vscode:\/\/\S*)/gmi);
+
+        if (match) {
+            const [url] = match;
+
+            this.command = {
+                title: 'open file',
+                command: 'infocus.todoist.openTextDocument',
+                arguments: [url]
+            };
+        }
     }
 
     pushTaskToChildrens(task: TaskItem) {

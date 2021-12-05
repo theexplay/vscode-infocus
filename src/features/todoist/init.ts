@@ -1,4 +1,4 @@
-import { ProgressLocation } from "vscode";
+import { ExtensionContext, ProgressLocation } from "vscode";
 import { SettingsHelper } from "../../lib/settingsHelper";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
 import { syncFx } from "./models";

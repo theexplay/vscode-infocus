@@ -14,4 +14,5 @@ export enum View {
     WebviewView = 'WebviewView',
     CodeLens = 'CodeLens',
 };
+
 export type ViewId = `${typeof ExtensionName}.${Integration}.${View}`

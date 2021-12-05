@@ -38,9 +38,6 @@ async function toggleTask(task: TaskItem): Promise<void> {
     completed ? uncompleteTaskFx(task._raw) : completeTaskFx(task._raw)
   )
 
-  // @ts-ignore
-  providerStore.get(Integration.todoist).refresh(task);
-
   setTimeout(async () => {
     const action = await window.showInformationMessage(`1 task completed`, 'Undo', 'Close');
 

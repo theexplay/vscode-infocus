@@ -7,7 +7,7 @@ export class SettingsHelper {
     }
 
     static getApiToken(): string {
-        return workspace.getConfiguration(ExtensionName).get('todoist.apiToken') || '';
+        return workspace.getConfiguration(ExtensionName).get('todoist.token') || '';
     }
 }
 

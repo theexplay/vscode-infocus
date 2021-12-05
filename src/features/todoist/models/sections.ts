@@ -1,10 +1,13 @@
-import { createEffect, createStore, merge } from "effector";
+import { createEffect, createEvent, createStore, merge } from "effector";
 import { SectionUpdate } from "todoist/dist/v8-types";
 import { Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
 import { Section } from "../entities";
 import { SectionItem } from "../providers/SectionItem";
 import { syncFx } from "./common";
+
+/** Events */
+export const updateSections = createEvent<Section[]>();
 
 /** Stores */
 export const $sections = createStore<Section[]>([]);
@@ -19,7 +22,8 @@ export const $filterSectionsByProjectId = (projectId: Id) => $sectionsProvider.m
 );
 
 $sections
-    .on(syncFx.doneData, (_, { sections }) => [...sections]);
+    .on(syncFx.doneData, (_, { sections }) => [...sections])
+    .on(updateSections, (_, sections) => [...sections]);
 
 merge([
     updateSectionFx.done,

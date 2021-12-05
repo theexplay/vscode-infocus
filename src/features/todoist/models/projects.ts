@@ -1,9 +1,12 @@
-import { createStore } from "effector";
+import { createEvent, createStore } from "effector";
 import { Id } from "../../../lib/listToTree";
 import { Project } from "../entities";
 import { ProjectItem } from "../providers/ProjectItem";
 import { syncFx } from "./common";
 import { $tasks } from "./tasks";
+
+/** Events */
+export const updateProjects = createEvent<Project[]>();
 
 /** Stores */
 export const $projects = createStore<Project[]>([]);
@@ -27,4 +30,5 @@ export const hasProjectItems = (projectId: number) => $tasks.map((tasks) =>
 $projects
     .on(syncFx.doneData, (_, { projects }) => {
         return [...projects];
-    });
+    })
+    .on(updateProjects, (_, projects) => [...projects])

@@ -1,5 +1,8 @@
-import { TreeDataProvider, TreeItem, EventEmitter } from 'vscode';
-import { $tasksTreeLeaf, $projectsProvider, $filterTasksByProjectIdWithoutSectionId, $filterSectionsByProjectId, $filterTasksBySectionId, syncFx } from './models';
+import { merge } from 'effector';
+import { TreeDataProvider, TreeItem, EventEmitter, ExtensionContext } from 'vscode';
+import { Project, Section, Task } from './entities';
+import { $tasksTreeLeaf, $projectsProvider, $filterTasksByProjectIdWithoutSectionId, $filterSectionsByProjectId, $filterTasksBySectionId, syncFx, $tasks, $projects, $sections, updateSections, updateProjects } from './models';
+import { updateTasks } from './models/tasks';
 
 import { ProjectItem } from './providers/ProjectItem';
 import { SectionItem } from './providers/SectionItem';
@@ -13,12 +16,44 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
 
     syncInitialPromise: Promise<any>;
 
-    constructor() {
+    constructor(context: ExtensionContext) {
         this.syncInitialPromise = syncFx(['projects', 'sections', 'items']);
+        try {
+            const persistedTasks: Task[] = JSON.parse(context.globalState.get('$tasks') ?? '[]');
+            const persistedSections: Section[] = JSON.parse(context.globalState.get('$sections') ?? '[]');
+            const persistedProjects: Project[] = JSON.parse(context.globalState.get('$projects') ?? '[]');
+
+            updateTasks(persistedTasks);
+            updateSections(persistedSections);
+            updateProjects(persistedProjects);
+        } catch (err) {
+            console.info('smth went  wrong', err);
+        }
 
         $tasksTreeLeaf.watch(() => {
             this.refresh();
         });
+
+        $tasks.watch((payload) => {
+            if (payload.length) {
+                
+                context.globalState.update('$tasks', JSON.stringify(payload));
+            }
+        });
+
+        $projects.watch((payload) => {
+            if (payload.length) {
+                context.globalState.update('$projects', JSON.stringify(payload));
+            }
+        });
+
+        $sections.watch((payload) => {
+            if (payload.length) {
+                context.globalState.update('$sections', JSON.stringify(payload));
+            }
+    
+        });
+
     }
 
     refresh(element?: TodoistProviderItem): void {
@@ -31,8 +66,8 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
 
     async getChildren(element?: TodoistProviderItem): Promise<TodoistProviderItem[]> {
         if (!element) {
-            // Чтобы показать лоадер в TreeView
-            await this.syncInitialPromise;
+            // // Чтобы показать лоадер в TreeView
+            // await this.syncInitialPromise;
 
             return $projectsProvider.getState();
         } else if (element instanceof ProjectItem) {

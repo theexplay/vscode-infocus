@@ -1,5 +1,5 @@
 import { TodoistV8Types } from "todoist";
-import { createEffect, createStore, merge } from "effector";
+import { createEffect, createEvent, createStore, merge } from "effector";
 import { Task } from "../entities";
 import { listToTree, Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
@@ -14,6 +14,9 @@ export const uncompleteTaskFx = createEffect(async ({ id }: Task) => todoistApi.
 export const addTaskFx = createEffect(async (task: TodoistV8Types.ItemAdd) => todoistApi.items.add(task));
 
 export const updateTaskFx = createEffect(async (task: TodoistV8Types.ItemUpdate) => todoistApi.items.update(task));
+
+/** Events */
+export const updateTasks = createEvent<Task[]>();
 
 /** Stores */
 export const $tasks = createStore<Task[]>([])
@@ -39,6 +42,7 @@ export const $filterTasksBySectionId = (sectionId: Id) => $tasksTreeLeaf.map(
 /** Subscriptions */
 $tasks
     .on(syncFx.doneData, (_, { tasks }) => [...tasks])
+    .on(updateTasks, (_, tasks) => [...tasks])
 
 merge([
     uncompleteTaskFx.done,

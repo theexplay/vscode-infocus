@@ -19,16 +19,17 @@ export const updateTaskFx = createEffect(async (task: TodoistV8Types.ItemUpdate)
 export const updateTasks = createEvent<Task[]>();
 
 /** Stores */
-export const $tasks = createStore<Task[]>([])
+export const $tasks = createStore<Task[]>([]);
 
 /** Computed stores */
+// FIXME: TaskItem creates only on top level
 export const $tasksTreeLeaf = $tasks.map((tasks) => {
     return listToTree(tasks).map((todo) => new TaskItem(todo));
-})
+});
 
 export const $tasksMap = $tasks.map<Record<number, Task>>((tasks) => {
     return tasks.reduce((acc, task) => ({ ...acc, [task.id]: task }), {});
-})
+});
 
 export const $filterTasksByProjectIdWithoutSectionId = (projectId: Id) => $tasksTreeLeaf.map(
     (tasks) => tasks.filter((task) => task.projectId === projectId && !task.sectionId)
@@ -42,7 +43,7 @@ export const $filterTasksBySectionId = (sectionId: Id) => $tasksTreeLeaf.map(
 /** Subscriptions */
 $tasks
     .on(syncFx.doneData, (_, { tasks }) => [...tasks])
-    .on(updateTasks, (_, tasks) => [...tasks])
+    .on(updateTasks, (_, tasks) => [...tasks]);
 
 merge([
     uncompleteTaskFx.done,
@@ -51,4 +52,4 @@ merge([
     updateTaskFx.done,
 ]).watch(async () => {
     await syncFx();
-})
+});

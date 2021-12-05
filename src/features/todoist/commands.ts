@@ -1,12 +1,14 @@
+import * as schedule from 'node-schedule';
 import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window, workspace } from "vscode";
-import { Integration } from "../../lib/constants";
-import { providerStore } from "../../stores";
 import { TaskItem } from "./providers/TaskItem";
-import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap } from "./models";
+import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, $tasksTreeLeaf } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";
 import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
 import { SectionItem } from "./providers/SectionItem";
+import { Task } from './entities';
+import { WithChildren } from '../../lib/types';
+import { sample } from 'effector';
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
@@ -22,6 +24,8 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.sectionAddTask', sectionAddTask),
     commands.registerCommand('infocus.todoist.openTextDocument', openTextDocument),
   );
+
+  tasksDateObserver();
 }
 
 const progressOptions: ProgressOptions = {
@@ -36,7 +40,7 @@ async function toggleTask(task: TaskItem): Promise<void> {
   await withAsyncProgress(
     progressOptions,
     completed ? uncompleteTaskFx(task._raw) : completeTaskFx(task._raw)
-  )
+  );
 
   setTimeout(async () => {
     const action = await window.showInformationMessage(`1 task completed`, 'Undo', 'Close');
@@ -104,8 +108,8 @@ async function addTask(project?: ProjectItem, taskContent?: string, section?: Se
   }
 }
 
-async function openInBrowser(task: TaskItem): Promise<void> {
-  commands.executeCommand('vscode.open', Uri.parse(`https://todoist.com/app/task/${task.id}`))
+async function openInBrowser(task: TaskItem | Task): Promise<void> {
+  commands.executeCommand('vscode.open', Uri.parse(`https://todoist.com/app/task/${task.id}`));
 }
 
 async function refresh(): Promise<void> {
@@ -144,4 +148,50 @@ async function sectionAddTask(section: SectionItem) {
 
 async function openTextDocument(uri: Uri) {
   env.openExternal(uri);
+}
+
+
+function tasksDateObserver() {
+  // Watch sync status, cause at first persist state from global storage,
+  // it may be outdated or changed after new sync
+  syncFx.done.watch(() => {
+    const tasks = $tasks.getState();
+    // @ts-ignore
+    schedule.gracefulShutdown();
+
+    if (tasks.length) {
+      tasks.forEach(async (task) => {
+        if (task?.due?.date && !task.checked) {
+          const taskDate = new Date(task.due.date);
+
+          if (taskDate.getTime() > (new Date).getTime()) {
+            schedule.scheduleJob(taskDate, async () => {
+              showMessageWithSheduleAction(task, `Task due now: ${task.content}`);
+            });
+          } else {
+            showMessageWithSheduleAction(task, `You missed due date. Task: ${task.content}`);
+          }
+        }
+      });
+    }
+  });
+}
+
+enum SheduleAction {
+  MarkAsCompleted = 'Mark as completed',
+  OpenInBrowser = 'Open in browser',
+}
+
+async function showMessageWithSheduleAction(task: Task, message: string) {
+  const action = await window.showInformationMessage(message, SheduleAction.MarkAsCompleted, SheduleAction.OpenInBrowser);
+
+  switch(action) {
+    case SheduleAction.MarkAsCompleted:
+      // FIXME: models/tasks/$tasksTreeLeaf
+      toggleTask(new TaskItem({...task, children: []}));
+      break;
+    case SheduleAction.OpenInBrowser:
+      openInBrowser(task);
+      break;
+  }
 }

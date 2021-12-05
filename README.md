@@ -15,8 +15,6 @@
 - [ ] support scheduler tasks
 - [x] add todos from code using codelens with vscode deeplink
 - [ ] offline work
-- [ ] save ui state, like opened project
-- [ ] pin project to top
 - [ ] ...
 
 <!-- ### Notion

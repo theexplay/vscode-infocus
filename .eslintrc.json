@@ -10,14 +10,6 @@
         "effector"
     ],
     "rules": {
-        "@typescript-eslint/naming-convention": [
-            "error",
-            {
-                "format": [
-                    "PascalCase"
-                ]
-            }
-        ],
         "@typescript-eslint/semi": "warn",
         "curly": "warn",
         "eqeqeq": "warn",

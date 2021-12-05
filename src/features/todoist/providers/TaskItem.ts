@@ -8,7 +8,7 @@ export enum TaskIcon {
     Uncompleted = 'circle-large-outline',
 }
 
-export const getTaskIcon = (completed: number) => new ThemeIcon(!!completed ? TaskIcon.Completed : TaskIcon.Uncompleted)
+export const getTaskIcon = (completed: number) => new ThemeIcon(!!completed ? TaskIcon.Completed : TaskIcon.Uncompleted);
 
 export class TaskItem extends TreeItem {
     _raw: Task;

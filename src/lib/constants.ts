@@ -15,4 +15,4 @@ export enum View {
     CodeLens = 'CodeLens',
 };
 
-export type ViewId = `${typeof ExtensionName}.${Integration}.${View}`
+export type ViewId = `${typeof ExtensionName}.${Integration}.${View}`;

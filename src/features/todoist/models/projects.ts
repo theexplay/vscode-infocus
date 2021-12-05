@@ -31,4 +31,4 @@ $projects
     .on(syncFx.doneData, (_, { projects }) => {
         return [...projects];
     })
-    .on(updateProjects, (_, projects) => [...projects])
+    .on(updateProjects, (_, projects) => [...projects]);

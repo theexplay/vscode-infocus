@@ -1,8 +1,20 @@
-import { merge } from 'effector';
 import { TreeDataProvider, TreeItem, EventEmitter, ExtensionContext } from 'vscode';
 import { Project, Section, Task } from './entities';
-import { $tasksTreeLeaf, $projectsProvider, $filterTasksByProjectIdWithoutSectionId, $filterSectionsByProjectId, $filterTasksBySectionId, syncFx, $tasks, $projects, $sections, updateSections, updateProjects } from './models';
-import { updateTasks } from './models/tasks';
+
+import {
+    $tasksTreeLeaf,
+    $projectsProvider,
+    $filterTasksByProjectIdWithoutSectionId,
+    $filterSectionsByProjectId,
+    $filterTasksBySectionId,
+    syncFx,
+    $tasks,
+    $projects,
+    $sections,
+    updateTasks,
+    updateSections,
+    updateProjects
+} from './models';
 
 import { ProjectItem } from './providers/ProjectItem';
 import { SectionItem } from './providers/SectionItem';
@@ -36,7 +48,6 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
 
         $tasks.watch((payload) => {
             if (payload.length) {
-                
                 context.globalState.update('$tasks', JSON.stringify(payload));
             }
         });
@@ -51,7 +62,6 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
             if (payload.length) {
                 context.globalState.update('$sections', JSON.stringify(payload));
             }
-    
         });
 
     }
@@ -77,7 +87,7 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
             return [...sections, ...tasks];
         } else if (element instanceof SectionItem) {
             const tasksInSection = $filterTasksBySectionId(element._raw.id).getState();
-            const tasksInProject = $filterTasksByProjectIdWithoutSectionId(element._raw.id).getState()
+            const tasksInProject = $filterTasksByProjectIdWithoutSectionId(element._raw.id).getState();
 
             return [...tasksInSection, ...tasksInProject];
         } else if (element instanceof TaskItem) {

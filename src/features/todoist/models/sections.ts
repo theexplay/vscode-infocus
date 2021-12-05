@@ -29,4 +29,4 @@ merge([
     updateSectionFx.done,
 ]).watch(async () => {
     await syncFx();
-})
+});

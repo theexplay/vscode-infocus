@@ -12,12 +12,21 @@ Todos, notes, snippets, etc. integrated into development flow.
     - open tasks in browser
     - create tasks in project or section
     - inline edit tasks and sections
-    - support due dates of tasks
+    - notifications on due date of task (passed or came) 
     - show code lens for todos
 
     - In progress:
         - offline work
         - pin project
+
+### Create tasks from toolbar, project or section
+<img src="media/features/create-tasks.gif" />
+
+### Edit tasks content, (un)complete tasks
+<img src="media/features/editing.gif" />
+
+### Add tasks from code. Deep links from sidebar and web application
+<img src="media/features/codelens.gif" />
 
 ## Configuration
 > File > Preferences > Settings > InFocus

@@ -16,5 +16,6 @@ export class SectionItem extends TreeItem {
         this.projectId = section.project_id;
 
         this.tooltip = section.name + ' (section)';
+        this.iconPath = new ThemeIcon('folder-opened');
     }
 };

@@ -31,7 +31,7 @@ export class TodoistCodelensProvider implements CodeLensProvider {
 
             if (range) {
                 this.codeLenses.push(new CodeLens(range, {
-                    title: "Add to InFocus todos?",
+                    title: "Add to todoist?",
                     command: "infocus.todoist.addTask",
                     arguments: [undefined, `${matches[matches.length - 1].trim()} ${env.uriScheme}://file${document.uri.path}:${line.lineNumber}`]
                 }));

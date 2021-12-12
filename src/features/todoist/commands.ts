@@ -1,14 +1,12 @@
 import * as schedule from 'node-schedule';
-import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window, workspace } from "vscode";
+import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
 import { TaskItem } from "./providers/TaskItem";
-import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, $tasksTreeLeaf } from "./models";
+import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";
 import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
 import { SectionItem } from "./providers/SectionItem";
 import { Task } from './entities';
-import { WithChildren } from '../../lib/types';
-import { sample } from 'effector';
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
@@ -56,8 +54,8 @@ async function toggleTask(task: TaskItem): Promise<void> {
 
 async function editTask(task: TaskItem): Promise<void> {
   const { project_id, content, id } = task._raw;
-  const projects = $projectsMap.getState();
-  const selectedProject = projects[project_id];
+  // eslint-disable-next-line effector/no-getState
+  const selectedProject = $projectsMap.getState()[project_id];
 
   const newContent = await window.showInputBox({
     title: `Edit task in project: ${selectedProject.name}`,
@@ -77,6 +75,7 @@ async function editTask(task: TaskItem): Promise<void> {
 }
 
 async function addTask(project?: ProjectItem, taskContent?: string, section?: SectionItem): Promise<void> {
+  // eslint-disable-next-line effector/no-getState
   const formattedProjects: ({ id: Id } & QuickPickItem)[] = $projects.getState().map((project) => ({
     label: project.name,
     description: 'some description',
@@ -142,6 +141,7 @@ async function sectionRename(section: SectionItem) {
 
 async function sectionAddTask(section: SectionItem) {
   const { project_id } = section._raw;
+  // eslint-disable-next-line effector/no-getState
   const project = $projectsProviderMap.getState()[project_id];
   addTask(project, undefined, section);
 }
@@ -152,9 +152,12 @@ async function openTextDocument(uri: Uri) {
 
 
 function tasksDateObserver() {
+  // Map of tasks id which was already shown to user
+  const notifiedTasks: Record<number, boolean> = {};
   // Watch sync status, cause at first persist state from global storage,
   // it may be outdated or changed after new sync
   syncFx.done.watch(() => {
+    // eslint-disable-next-line effector/no-getState
     const tasks = $tasks.getState();
     // @ts-ignore
     schedule.gracefulShutdown();
@@ -164,12 +167,16 @@ function tasksDateObserver() {
         if (task?.due?.date && !task.checked) {
           const taskDate = new Date(task.due.date);
 
-          if (taskDate.getTime() > (new Date).getTime()) {
-            schedule.scheduleJob(taskDate, async () => {
-              showMessageWithSheduleAction(task, `Task due now: ${task.content}`);
-            });
-          } else {
-            showMessageWithSheduleAction(task, `You missed due date. Task: ${task.content}`);
+          if (!notifiedTasks[task.id]) {
+            if (taskDate.getTime() > (new Date).getTime()) {
+              schedule.scheduleJob(taskDate, async () => {
+                showMessageWithSheduleAction(task, `Task due now: ${task.content}`);
+              });
+            } else {
+              showMessageWithSheduleAction(task, `You missed due date. Task: ${task.content}`);
+            }
+
+            notifiedTasks[task.id] = true;
           }
         }
       });
@@ -185,10 +192,10 @@ enum SheduleAction {
 async function showMessageWithSheduleAction(task: Task, message: string) {
   const action = await window.showInformationMessage(message, SheduleAction.MarkAsCompleted, SheduleAction.OpenInBrowser);
 
-  switch(action) {
+  switch (action) {
     case SheduleAction.MarkAsCompleted:
       // FIXME: models/tasks/$tasksTreeLeaf
-      toggleTask(new TaskItem({...task, children: []}));
+      toggleTask(new TaskItem({ ...task, children: [] }));
       break;
     case SheduleAction.OpenInBrowser:
       openInBrowser(task);

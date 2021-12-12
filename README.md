@@ -1,38 +1,27 @@
 # vscode-infocus 
 
-<img src="media/features/common.gif" width="400" >
+## Motivation
+Make extension with customizable dashboard.
+Todos, notes, snippets, etc. integrated into development flow.
 
-### Todoist roadmap/ideas
-- [x] get projects
-- [x] get sections
-- [x] get tasks
-- [x] complete tasks
-- [x] uncomplete tasks
-- [x] open task in browser
-- [x] create task
-- [x] inline edit task content
-- [x] inline edit section content
-- [ ] support scheduler tasks
-- [x] add todos from code using codelens with vscode deeplink
-- [ ] offline work
-- [ ] ...
+## Available features
 
-<!-- ### Notion
-### Google Keep
-### Any\.do -->
+- Todoist integration in sidebar (tree view)
+    - get projects, sections, tasks
+    - complete, uncomplete tasks
+    - open tasks in browser
+    - create tasks in project or section
+    - inline edit tasks and sections
+    - support due dates of tasks
+    - show code lens for todos
 
-
+    - In progress:
+        - offline work
+        - pin project
 
 ## Configuration
-
-
 > File > Preferences > Settings > InFocus
 
 Setting id: `infocus.todoist.token` - token to access todoist
 
-## Features
-
-### Fast open extension tree from macos touchbar
-
-![touchbar](media/features/touchbar.png "Screenshot of Todoist projects")
-
+Setting id: `infocus.todoist.syncInternval` - value in minutes at which interval Todoist data is synced. If set to 0, interval will not be used. You can steel sync by action from sidebar.

@@ -1,3 +1,4 @@
+import { merge } from 'effector';
 import { TreeDataProvider, TreeItem, EventEmitter, ExtensionContext } from 'vscode';
 import { Project, Section, Task } from './entities';
 
@@ -13,7 +14,8 @@ import {
     $sections,
     updateTasks,
     updateSections,
-    updateProjects
+    updateProjects,
+    $sectionsProvider
 } from './models';
 
 import { ProjectItem } from './providers/ProjectItem';
@@ -39,10 +41,14 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
             updateSections(persistedSections);
             updateProjects(persistedProjects);
         } catch (err) {
-            console.info('smth went  wrong', err);
+            console.info('smth went wrong', err);
         }
 
-        $tasksTreeLeaf.watch(() => {
+        merge([
+            $tasksTreeLeaf,
+            $projectsProvider,
+            $sectionsProvider,
+        ]).watch(() => {
             this.refresh();
         });
 
@@ -76,9 +82,7 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
 
     async getChildren(element?: TodoistProviderItem): Promise<TodoistProviderItem[]> {
         if (!element) {
-            // // Чтобы показать лоадер в TreeView
-            // await this.syncInitialPromise;
-
+            // eslint-disable-next-line effector/no-getState
             return $projectsProvider.getState();
         } else if (element instanceof ProjectItem) {
             const sections = $filterSectionsByProjectId(element._raw.id).getState().sort((a, b) => a._raw.section_order - b._raw.section_order);

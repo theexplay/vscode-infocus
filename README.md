@@ -18,6 +18,8 @@ Todos, notes, snippets, etc. integrated into development flow.
     - In progress:
         - offline work
         - pin project
+        - pass custom regex for codelens
+        - toggle codelens mode
 
 ### Create tasks from toolbar, project or section
 <img src="media/features/create-tasks.gif" />
@@ -27,6 +29,9 @@ Todos, notes, snippets, etc. integrated into development flow.
 
 ### Add tasks from code. Deep links from sidebar and web application
 <img src="media/features/codelens.gif" />
+
+### Open links from task content using action icon
+<img src="media/features/open-links-from-content.gif" />
 
 ## Configuration
 > File > Preferences > Settings > InFocus

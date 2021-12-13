@@ -130,6 +130,12 @@
 				"title": "Add new section",
 				"category": "InFocus",
 				"icon": "$(new-folder)"
+			},
+			{
+				"command": "infocus.todoist.openLinkFromTask",
+				"title": "Open link from task",
+				"category": "InFocus",
+				"icon": "$(link)"
 			}
 		],
 		"menus": {
@@ -177,6 +183,10 @@
 				{
 					"command": "infocus.todoist.openTreeView",
 					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.openLinkFromTask",
+					"when": "false"
 				}
 			],
 			"view/title": [
@@ -209,17 +219,22 @@
 				},
 				{
 					"command": "infocus.todoist.toggleTask",
-					"group": "inline",
-					"when": "viewItem == taskItem"
+					"group": "inline@3",
+					"when": "viewItem =~ /taskItem/"
 				},
 				{
 					"command": "infocus.todoist.editTask",
-					"group": "inline",
-					"when": "viewItem == taskItem"
+					"group": "inline@2",
+					"when": "viewItem =~ /taskItem/"
 				},
 				{
 					"command": "infocus.todoist.openTaskInBrowser",
-					"when": "viewItem == taskItem"
+					"when": "viewItem =~ /taskItem/"
+				},
+				{
+					"command": "infocus.todoist.openLinkFromTask",
+					"group": "inline@1",
+					"when": "viewItem =~ /taskItem-hasLink/"
 				},
 				{
 					"command": "infocus.todoist.sectionRename",

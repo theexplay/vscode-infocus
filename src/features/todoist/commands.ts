@@ -13,7 +13,8 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.openTreeView', () => {
       commands.executeCommand('workbench.view.extension.infocus-sidebar-container');
     }),
-    commands.registerCommand(`infocus.todoist.toggleTask`, toggleTask),
+    commands.registerCommand('infocus.todoist.toggleTask', toggleTask),
+    commands.registerCommand('infocus.todoist.openLinkFromTask', openLinkFromTask),
     commands.registerCommand('infocus.todoist.editTask', editTask),
     commands.registerCommand('infocus.todoist.addTask', addTask),
     commands.registerCommand('infocus.todoist.openTaskInBrowser', openInBrowser),
@@ -73,6 +74,14 @@ async function editTask(task: TaskItem): Promise<void> {
         content: newContent,
       })
     );
+  }
+}
+
+function openLinkFromTask(task: TaskItem) {
+  const { link } = task;
+
+  if (link) {
+    commands.executeCommand('vscode.open', Uri.parse(link));
   }
 }
 

@@ -10,6 +10,8 @@ export enum TaskIcon {
 
 export const getTaskIcon = (completed: number) => new ThemeIcon(!!completed ? TaskIcon.Completed : TaskIcon.Uncompleted);
 
+const URI_REGEX = /((?:\/|https?:\/\/)[\w\d./?=#%-]+)/;
+
 export class TaskItem extends TreeItem {
     _raw: Task;
     contextValue = 'taskItem';
@@ -19,6 +21,7 @@ export class TaskItem extends TreeItem {
     sectionId: Id;
     completed: number;
     children: WithChildren<TaskItem>[] = [];
+    link?: string;
 
     constructor(
         task: WithChildren<Task>
@@ -44,6 +47,13 @@ export class TaskItem extends TreeItem {
                 command: 'infocus.todoist.openTextDocument',
                 arguments: [url]
             };
+        }
+
+        const [link] = task.content.match(URI_REGEX) ?? [];
+
+        if (link) {
+            this.link = link;
+            this.contextValue += ',taskItem-hasLink';
         }
     }
 

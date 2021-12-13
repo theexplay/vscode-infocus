@@ -1,9 +1,13 @@
-import { createEvent, createStore } from "effector";
+import { createEffect, createEvent, createStore, merge } from "effector";
+import { ProjectUpdate } from "todoist/dist/v8-types";
 import { Id } from "../../../lib/listToTree";
+import { todoistApi } from "../api";
 import { Project } from "../entities";
 import { ProjectItem } from "../providers/ProjectItem";
 import { syncFx } from "./common";
 import { $tasks } from "./tasks";
+
+export const updateProjectFx = createEffect(async (project: ProjectUpdate) => todoistApi.projects.update(project));
 
 /** Events */
 export const updateProjects = createEvent<Project[]>();
@@ -32,3 +36,9 @@ $projects
         return [...projects];
     })
     .on(updateProjects, (_, projects) => [...projects]);
+
+merge([
+    updateProjectFx.done
+]).watch(async () => {
+    await syncFx();
+});

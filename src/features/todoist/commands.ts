@@ -1,7 +1,7 @@
 import * as schedule from 'node-schedule';
 import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
 import { TaskItem } from "./providers/TaskItem";
-import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks } from "./models";
+import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";
 import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
@@ -21,6 +21,7 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.sectionRename', sectionRename),
     commands.registerCommand('infocus.todoist.sectionAddTask', sectionAddTask),
     commands.registerCommand('infocus.todoist.openTextDocument', openTextDocument),
+    commands.registerCommand('infocus.todoist.projectRename', projectRename),
   );
 
   tasksDateObserver();
@@ -118,7 +119,6 @@ async function refresh(): Promise<void> {
   );
 }
 
-
 async function sectionRename(section: SectionItem) {
   const sectionName = await window.showInputBox({
     title: `Editing section:`,
@@ -134,6 +134,27 @@ async function sectionRename(section: SectionItem) {
         // @ts-ignore
         id: section._raw.id,
         name: sectionName
+      })
+    );
+  }
+}
+
+async function projectRename(project: ProjectItem) {
+  const projectName = await window.showInputBox({
+    title: `Editing project:`,
+    placeHolder: 'Project name',
+    value: project._raw.name,
+    valueSelection: [-1, -1],
+    prompt: 'Enter new project name'
+  });
+
+  if (projectName) {
+    await withAsyncProgress(
+      progressOptions,
+      updateProjectFx({
+        // @ts-ignore
+        id: project._raw.id,
+        name: projectName
       })
     );
   }

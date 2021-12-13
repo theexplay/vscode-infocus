@@ -117,6 +117,12 @@
 				"command": "infocus.todoist.openTextDocument",
 				"title": "Open Text Document",
 				"category": "InFocus"
+			},
+			{
+				"command": "infocus.todoist.projectRename",
+				"title": "Rename project",
+				"category": "InFocus",
+				"icon": "$(edit)"
 			}
 		],
 		"menus": {
@@ -135,6 +141,10 @@
 				},
 				{
 					"command": "infocus.todoist.sectionRename",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.projectRename",
 					"when": "false"
 				},
 				{
@@ -173,7 +183,12 @@
 			"view/item/context": [
 				{
 					"command": "infocus.todoist.addTask",
-					"group": "inline",
+					"group": "inline@2",
+					"when": "viewItem == projectItem"
+				},
+				{
+					"command": "infocus.todoist.projectRename",
+					"group": "inline@1",
 					"when": "viewItem == projectItem"
 				},
 				{

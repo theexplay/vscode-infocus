@@ -11,7 +11,7 @@ Todos, notes, snippets, etc. integrated into development flow.
     - complete, uncomplete tasks
     - open tasks in browser
     - create tasks in project or section
-    - inline edit tasks and sections
+    - inline edit tasks, sections, projects name
     - notifications on due date of task (passed or came) 
     - show code lens for todos
 

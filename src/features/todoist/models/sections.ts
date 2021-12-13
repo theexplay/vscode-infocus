@@ -1,10 +1,14 @@
 import { createEffect, createEvent, createStore, merge } from "effector";
-import { SectionUpdate } from "todoist/dist/v8-types";
+import { SectionAdd, SectionUpdate } from "todoist/dist/v8-types";
 import { Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
 import { Section } from "../entities";
 import { SectionItem } from "../providers/SectionItem";
 import { syncFx } from "./common";
+
+export const updateSectionFx = createEffect(async (section: SectionUpdate) => todoistApi.sections.update(section));
+
+export const addSectionFx = createEffect(async (section: SectionAdd) => todoistApi.sections.add(section));
 
 /** Events */
 export const updateSections = createEvent<Section[]>();
@@ -14,8 +18,6 @@ export const $sections = createStore<Section[]>([]);
 
 /** Computed stores */
 export const $sectionsProvider = $sections.map((sections) => sections.map((section) => new SectionItem(section)));
-
-export const updateSectionFx = createEffect(async (section: SectionUpdate) => todoistApi.sections.update(section));
 
 export const $filterSectionsByProjectId = (projectId: Id) => $sectionsProvider.map(
     (sections) => sections.filter((section) => section.projectId === projectId)
@@ -27,6 +29,7 @@ $sections
 
 merge([
     updateSectionFx.done,
+    addSectionFx.done,
 ]).watch(async () => {
     await syncFx();
 });

@@ -1,7 +1,7 @@
 import * as schedule from 'node-schedule';
 import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
 import { TaskItem } from "./providers/TaskItem";
-import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx } from "./models";
+import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx, addSectionFx } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";
 import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
@@ -22,6 +22,7 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.sectionAddTask', sectionAddTask),
     commands.registerCommand('infocus.todoist.openTextDocument', openTextDocument),
     commands.registerCommand('infocus.todoist.projectRename', projectRename),
+    commands.registerCommand('infocus.todoist.addSection', addSectionToProject),
   );
 
   tasksDateObserver();
@@ -152,9 +153,27 @@ async function projectRename(project: ProjectItem) {
     await withAsyncProgress(
       progressOptions,
       updateProjectFx({
-        // @ts-ignore
         id: project._raw.id,
         name: projectName
+      })
+    );
+  }
+}
+
+async function addSectionToProject(project: ProjectItem) {
+  const sectionName = await window.showInputBox({
+    title: `Creating section in project: ${project.label}`,
+    placeHolder: 'Section name',
+    valueSelection: [-1, -1],
+    prompt: 'Enter new section name'
+  });
+
+  if (sectionName) {
+    await withAsyncProgress(
+      progressOptions,
+      addSectionFx({
+        project_id: project._raw.id,
+        name: sectionName
       })
     );
   }
@@ -170,7 +189,6 @@ async function sectionAddTask(section: SectionItem) {
 async function openTextDocument(uri: Uri) {
   env.openExternal(uri);
 }
-
 
 function tasksDateObserver() {
   // Map of tasks id which was already shown to user

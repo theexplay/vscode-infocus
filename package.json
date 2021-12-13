@@ -123,6 +123,12 @@
 				"title": "Rename project",
 				"category": "InFocus",
 				"icon": "$(edit)"
+			},
+			{
+				"command": "infocus.todoist.addSection",
+				"title": "Add new section",
+				"category": "InFocus",
+				"icon": "$(new-folder)"
 			}
 		],
 		"menus": {
@@ -145,6 +151,10 @@
 				},
 				{
 					"command": "infocus.todoist.projectRename",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.addSection",
 					"when": "false"
 				},
 				{
@@ -183,12 +193,17 @@
 			"view/item/context": [
 				{
 					"command": "infocus.todoist.addTask",
-					"group": "inline@2",
+					"group": "inline@3",
 					"when": "viewItem == projectItem"
 				},
 				{
 					"command": "infocus.todoist.projectRename",
 					"group": "inline@1",
+					"when": "viewItem == projectItem"
+				},
+				{
+					"command": "infocus.todoist.addSection",
+					"group": "inline@2",
 					"when": "viewItem == projectItem"
 				},
 				{

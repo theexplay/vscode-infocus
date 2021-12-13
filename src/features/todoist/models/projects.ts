@@ -1,10 +1,11 @@
-import { createEffect, createEvent, createStore, merge } from "effector";
+import { combine, createEffect, createEvent, createStore, merge } from "effector";
 import { ProjectUpdate } from "todoist/dist/v8-types";
 import { Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
 import { Project } from "../entities";
 import { ProjectItem } from "../providers/ProjectItem";
 import { syncFx } from "./common";
+import { $sections } from "./sections";
 import { $tasks } from "./tasks";
 
 export const updateProjectFx = createEffect(async (project: ProjectUpdate) => todoistApi.projects.update(project));
@@ -27,8 +28,10 @@ export const $projectsMap = $projects.map((projects) => projects.reduce<Record<I
     [project.id]: project
 }), {}));
 
-export const hasProjectItems = (projectId: number) => $tasks.map((tasks) =>
-    tasks.some(({ project_id }) => project_id === projectId)
+export const projectHasAnyItems = (projectId: number) => combine(
+    $tasks,
+    $sections,
+    (tasks, sections) => [...tasks, ...sections].some(({ project_id }) => project_id === projectId)
 );
 
 $projects

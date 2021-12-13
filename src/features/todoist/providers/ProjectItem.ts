@@ -1,7 +1,7 @@
 import path = require("path");
 import { ThemeColor, ThemeIcon, TreeItem, TreeItemCollapsibleState } from "vscode";
 import { Project } from "../entities";
-import { $filterTasksByProjectIdWithoutSectionId, hasProjectItems } from "../models";
+import { projectHasAnyItems } from "../models";
 
 export class ProjectItem extends TreeItem {
     _raw: Project;
@@ -19,7 +19,7 @@ export class ProjectItem extends TreeItem {
             this.iconPath = new ThemeIcon('inbox', new ThemeColor('textLink.foreground'));
         }
 
-        const hasItems = Boolean(hasProjectItems(project.id).getState());
+        const hasItems = Boolean(projectHasAnyItems(project.id).getState());
 
         if (!hasItems) {
             this.collapsibleState = TreeItemCollapsibleState.None;

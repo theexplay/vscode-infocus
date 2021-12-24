@@ -10,7 +10,7 @@ export enum TaskIcon {
 
 export const getTaskIcon = (completed: number) => new ThemeIcon(!!completed ? TaskIcon.Completed : TaskIcon.Uncompleted);
 
-const URI_REGEX = /((?:\/|https?:\/\/)[\w\d./?=#%-]+)/;
+const URI_REGEX = /\[([^\[]+)\]\((.*)\)/gm;
 
 export class TaskItem extends TreeItem {
     _raw: Task;
@@ -49,11 +49,20 @@ export class TaskItem extends TreeItem {
             };
         }
 
-        const [link] = task.content.match(URI_REGEX) ?? [];
+        // Create new instance of regex, cause of lastIndex position
+        const [fullmatch, text, link] = (new RegExp(URI_REGEX)).exec(task.content) ?? [];
 
         if (link) {
             this.link = link;
             this.contextValue += ',taskItem-hasLink';
+            this.tooltip = task.content;
+
+            const label = task.content.replace(fullmatch, text);
+            const index = label.indexOf(text);
+            this.label = {
+                label,
+                highlights: [[index, index + text.length]]
+            };
         }
     }
 

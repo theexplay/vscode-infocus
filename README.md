@@ -10,16 +10,20 @@ Todos, notes, snippets, etc. integrated into development flow.
     - get projects, sections, tasks
     - complete, uncomplete tasks
     - open tasks in browser
-    - create tasks in project or section
+    - create tasks and section in project or section
     - inline edit tasks, sections, projects name
     - notifications on due date of task (passed or came) 
     - show code lens for todos
+    - toggle codelens mode
+    - custom regex for codelens
+    - highlighting links from tasks content and open them in browser
 
     - In progress:
         - offline work
         - pin project
-        - pass custom regex for codelens
-        - toggle codelens mode
+
+## Preview
+<img src="media/features/preview.png" />
 
 ### Create tasks from toolbar, project or section
 <img src="media/features/create-tasks.gif" />

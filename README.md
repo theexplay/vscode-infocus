@@ -39,3 +39,5 @@ Todos, notes, snippets, etc. integrated into development flow.
 Setting id: `infocus.todoist.token` - token to access todoist
 
 Setting id: `infocus.todoist.syncInternval` - value in minutes at which interval Todoist data is synced. If set to 0, interval will not be used. You can steel sync by action from sidebar.
+
+Setting id: `infocus.todoist.regexp` - regexp pattern to match todos from code with codelens

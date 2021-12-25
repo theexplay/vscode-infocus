@@ -9,5 +9,9 @@ export class SettingsHelper {
     static getApiToken(): string {
         return workspace.getConfiguration(ExtensionName).get('todoist.token') || '';
     }
+
+    static getRegExpString(): string {
+        return workspace.getConfiguration(ExtensionName).get('todoist.regexp') || '/(todo|fixme)(.+)/gmi';
+    }
 }
 

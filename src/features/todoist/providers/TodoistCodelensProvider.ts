@@ -14,9 +14,12 @@ export class TodoistCodelensProvider implements CodeLensProvider {
         });
     }
 
-    public provideCodeLenses(document: TextDocument, token: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {console.log('');
-        const stringRegExp = SettingsHelper.getRegExpString();
+    public provideCodeLenses(document: TextDocument, token: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {
+        if (!SettingsHelper.isCodeLensEnabled()) {
+            return [];
+        }
 
+        const stringRegExp = SettingsHelper.getRegExpString();
         const flags = stringRegExp.replace(/.*\/([gimy]*)$/, '$1');
         const pattern = stringRegExp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
         const regex = new RegExp(pattern, flags);

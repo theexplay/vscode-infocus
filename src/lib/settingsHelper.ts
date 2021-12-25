@@ -13,5 +13,9 @@ export class SettingsHelper {
     static getRegExpString(): string {
         return workspace.getConfiguration(ExtensionName).get('todoist.regexp', '/(todo|fixme)(.+)/gmi');
     }
+
+    static isCodeLensEnabled(): boolean {
+        return workspace.getConfiguration(ExtensionName).get('todoist.enableCodeLens', true);
+    }
 }
 

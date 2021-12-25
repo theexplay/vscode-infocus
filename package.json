@@ -266,6 +266,11 @@
 					"default": 60,
 					"description": "Value in minutes at which interval Todoist data is synced. If set to 0, interval will not be used. You can steel sync by action from sidebar."
 				},
+				"infocus.todoist.enableCodeLens": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable codelens to find and highlight todos by regexp from code"
+				},
 				"infocus.todoist.regexp": {
 					"type": "string",
 					"default": "/(todo|fixme)(.+)/gmi",

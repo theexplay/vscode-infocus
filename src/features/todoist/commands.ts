@@ -1,5 +1,5 @@
 import * as schedule from 'node-schedule';
-import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
+import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window, workspace } from "vscode";
 import { TaskItem } from "./providers/TaskItem";
 import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx, addSectionFx } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";

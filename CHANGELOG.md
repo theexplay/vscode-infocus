@@ -4,6 +4,14 @@ All notable changes to the "vscode-infocus" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.3.0]
+New features:
+- Added Today, Missed and Upcoming views
+- Added action "copy to clipboard" for tasks
+
+Fixes:
+- Fixed notification about missed due date. Notify only if day passed. Previously, notifications were sent on the same day.
+
 ## [0.2.0]
 New features:
 - Config option to disable codelens

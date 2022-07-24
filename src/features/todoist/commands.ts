@@ -1,12 +1,15 @@
 import * as schedule from 'node-schedule';
+import { format, isPast, isToday } from 'date-fns';
 import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
 import { TaskItem } from "./providers/TaskItem";
-import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx, addSectionFx } from "./models";
+import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx, addSectionFx, UPCOMING_PROJECT, TODAY_PROJECT, MISSING_PROJECT } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";
 import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
 import { SectionItem } from "./providers/SectionItem";
 import { Task } from './entities';
+import { stringify } from 'querystring';
+import { DueDate } from 'todoist/dist/v8-types';
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
@@ -16,6 +19,7 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.toggleTask', toggleTask),
     commands.registerCommand('infocus.todoist.openLinkFromTask', openLinkFromTask),
     commands.registerCommand('infocus.todoist.editTask', editTask),
+    commands.registerCommand('infocus.todoist.copyTask', copyTask),
     commands.registerCommand('infocus.todoist.addTask', addTask),
     commands.registerCommand('infocus.todoist.openTaskInBrowser', openInBrowser),
     commands.registerCommand('infocus.todoist.refresh', refresh),
@@ -77,6 +81,11 @@ async function editTask(task: TaskItem): Promise<void> {
   }
 }
 
+async function copyTask(task: TaskItem): Promise<void> {
+  env.clipboard.writeText(task._raw.content);
+  window.showInformationMessage('Copied to clipboard!');
+}
+
 function openLinkFromTask(task: TaskItem) {
   const { link } = task;
 
@@ -97,9 +106,47 @@ async function addTask(project?: ProjectItem, taskContent?: string, section?: Se
     title: 'Select a project where to create a task',
   });
 
+  let due: DueDate | undefined;
+
+  if ([
+    String(UPCOMING_PROJECT.id),
+    String(MISSING_PROJECT.id),
+    String(TODAY_PROJECT.id)
+  ].includes(String(selectedProject?.id))) {
+    try {
+      const selectedDate = await window.showInputBox({
+        title: `Enter due date`,
+        placeHolder: format(new Date(), 'yyyy-MM-dd'),
+        value: format(new Date(), 'yyyy-MM-dd'),
+        valueSelection: [-2, -2],
+        prompt: 'Valid example: 2022-10-21 (YEAR-MONTH-DAY)',
+        validateInput: (value: string) => {
+          if (/^\d{4}\-\d{1,2}\-\d{1,2}$/g.test(value)) {
+            return '';
+          }
+          return 'Invalid time value.';
+        }
+      });
+
+      due = {
+        date: selectedDate!,
+        is_recurring: false,
+        lang: "en",
+        string: format(new Date(selectedDate!), 'd MMM'),
+        // @ts-ignore
+        timezone: null
+      };
+    } catch (e) {
+      return;
+    }
+  }
+
   if (selectedProject) {
+    const msg = !due ?
+      `To create task in project: ${selectedProject.label}. ${section ? `In section: ${section.label}` : ''}` :
+      `Creating task with due date: "${due.date}" .`;
     const task = await window.showInputBox({
-      title: `To create task in project: ${selectedProject.label}. ${section ? `In section: ${section.label}` : ''}`,
+      title: msg,
       placeHolder: 'Task name',
       value: taskContent,
       valueSelection: [-1, -1],
@@ -111,7 +158,8 @@ async function addTask(project?: ProjectItem, taskContent?: string, section?: Se
         addTaskFx({
           content: task,
           project_id: selectedProject.id,
-          section_id: section?._raw.id ?? undefined
+          section_id: section?._raw.id ?? undefined,
+          due
         })
       );
     }
@@ -216,11 +264,11 @@ function tasksDateObserver() {
           const taskDate = new Date(task.due.date);
 
           if (!notifiedTasks[task.id]) {
-            if (taskDate.getTime() > (new Date).getTime()) {
+            if (isToday(taskDate)) {
               schedule.scheduleJob(taskDate, async () => {
                 showMessageWithSheduleAction(task, `Task due now: ${task.content}`);
               });
-            } else {
+            } else if (isPast(taskDate)) {
               showMessageWithSheduleAction(task, `You missed due date. Task: ${task.content}`);
             }
 

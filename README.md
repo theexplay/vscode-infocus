@@ -17,10 +17,8 @@ Todos, notes, snippets, etc. integrated into development flow.
     - toggle codelens mode
     - custom regex for codelens
     - highlighting links from tasks content and open them in browser
-
-    - In progress:
-        - offline work
-        - pin project
+    - Today/Upcoming/Missed views
+    - Copy to clipboard text content of task
 
 ## Preview
 <img src="media/features/preview.png" />

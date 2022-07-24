@@ -1,3 +1,4 @@
+import { isFuture, isPast, isToday } from 'date-fns';
 import { merge } from 'effector';
 import { TreeDataProvider, TreeItem, EventEmitter, ExtensionContext } from 'vscode';
 import { Project, Section, Task } from './entities';
@@ -15,8 +16,15 @@ import {
     updateTasks,
     updateSections,
     updateProjects,
-    $sectionsProvider
+    $sectionsProvider,
+    $filterTasksByTodayDue,
+    $dateSections,
+    $filterTasksByDate,
+    UPCOMING_PROJECT,
+    TODAY_PROJECT,
+    MISSING_PROJECT,
 } from './models';
+import { DateSectionItem } from './providers/DateSectionItem';
 
 import { ProjectItem } from './providers/ProjectItem';
 import { SectionItem } from './providers/SectionItem';
@@ -85,6 +93,27 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
             // eslint-disable-next-line effector/no-getState
             return $projectsProvider.getState();
         } else if (element instanceof ProjectItem) {
+            if ([String(UPCOMING_PROJECT.id), String(MISSING_PROJECT.id)].includes(element.id)) {
+                const isMissed = element.id === String(MISSING_PROJECT.id);
+                // eslint-disable-next-line effector/no-getState
+                return Object.values($dateSections.getState())
+                    .filter((dateSection) => {
+                        const date = new Date(dateSection.date);
+
+                        return isMissed ? !isFuture(date) && !isToday(date) : !isPast(date) && !isToday(date);
+                    })
+                    .sort((a, b) => {
+                        const aDate = (new Date(a.date)).getTime();
+                        const bDate = (new Date(b.date)).getTime();
+                        return aDate - bDate;
+                    })
+                    .map((section) => new DateSectionItem(section));
+            }
+
+            if (element.id === String(TODAY_PROJECT.id)) {
+                return $filterTasksByTodayDue().getState();
+            }
+
             const sections = $filterSectionsByProjectId(element._raw.id).getState().sort((a, b) => a._raw.section_order - b._raw.section_order);
             const tasks = $filterTasksByProjectIdWithoutSectionId(element._raw.id).getState().sort((a, b) => a._raw.child_order - b._raw.child_order);
 
@@ -94,8 +123,9 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
             const tasksInProject = $filterTasksByProjectIdWithoutSectionId(element._raw.id).getState();
 
             return [...tasksInSection, ...tasksInProject];
+        } else if (element instanceof DateSectionItem) {
+            return $filterTasksByDate(element.id!).getState();
         } else if (element instanceof TaskItem) {
-
             return element.children ?? [];
         } else {
             return [];
@@ -103,4 +133,4 @@ export class TodoistTreeView implements TreeDataProvider<TodoistProviderItem> {
     }
 }
 
-type TodoistProviderItem = ProjectItem | TaskItem | SectionItem;
+type TodoistProviderItem = ProjectItem | TaskItem | SectionItem | DateSectionItem;

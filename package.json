@@ -2,7 +2,7 @@
 	"name": "vscode-infocus",
 	"displayName": "VSCode InFocus",
 	"description": "",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"engines": {
 		"vscode": "^1.62.0"
 	},
@@ -77,6 +77,12 @@
 				"title": "Edit Task",
 				"category": "InFocus",
 				"icon": "$(edit)"
+			},
+			{
+				"command": "infocus.todoist.copyTask",
+				"title": "Copy text content",
+				"category": "InFocus",
+				"icon": "$(clippy)"
 			},
 			{
 				"command": "infocus.todoist.openTreeView",
@@ -181,6 +187,10 @@
 					"when": "false"
 				},
 				{
+					"command": "infocus.todoist.copyTask",
+					"when": "false"
+				},
+				{
 					"command": "infocus.todoist.openTreeView",
 					"when": "false"
 				},
@@ -205,7 +215,7 @@
 				{
 					"command": "infocus.todoist.addTask",
 					"group": "inline@3",
-					"when": "viewItem == projectItem"
+					"when": "viewItem =~ /projectItem|dateProjectItem/"
 				},
 				{
 					"command": "infocus.todoist.projectRename",
@@ -224,6 +234,11 @@
 				},
 				{
 					"command": "infocus.todoist.editTask",
+					"group": "inline@2",
+					"when": "viewItem =~ /taskItem/"
+				},
+				{
+					"command": "infocus.todoist.copyTask",
 					"group": "inline@2",
 					"when": "viewItem =~ /taskItem/"
 				},
@@ -309,6 +324,7 @@
 		"webpack-cli": "^4.7.0"
 	},
 	"dependencies": {
+		"date-fns": "^2.29.1",
 		"effector": "^22.1.2",
 		"node-schedule": "^2.1.0",
 		"todoist": "^0.5.1"

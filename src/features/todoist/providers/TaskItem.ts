@@ -30,7 +30,7 @@ export class TaskItem extends TreeItem {
 
         this._raw = task;
         this.iconPath = getTaskIcon(task.checked);
-        this.id = String(task.id);
+        this.id = `${String(task.id)}_${Math.floor(Math.random() * 1000)}`;
         this.parentId = task.parent_id;
         this.projectId = task.project_id;
         this.sectionId = task.section_id;

@@ -4,6 +4,10 @@ All notable changes to the "vscode-infocus" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.4.0]
+New feature:
+- Added action button to remove section
+
 ## [0.3.0]
 New features:
 - Added Today, Missed and Upcoming views

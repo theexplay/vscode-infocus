@@ -2,7 +2,7 @@
 	"name": "vscode-infocus",
 	"displayName": "VSCode InFocus",
 	"description": "",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"engines": {
 		"vscode": "^1.62.0"
 	},
@@ -121,6 +121,12 @@
 				"icon": "$(plus)"
 			},
 			{
+				"command": "infocus.todoist.removeSection",
+				"title": "Remove section",
+				"category": "InFocus",
+				"icon": "$(trash)"
+			},
+			{
 				"command": "infocus.todoist.openTextDocument",
 				"title": "Open Text Document",
 				"category": "InFocus"
@@ -160,6 +166,10 @@
 				},
 				{
 					"command": "infocus.todoist.sectionRename",
+					"when": "false"
+				},
+				{
+					"command": "infocus.todoist.removeSection",
 					"when": "false"
 				},
 				{
@@ -260,6 +270,11 @@
 					"command": "infocus.todoist.sectionAddTask",
 					"when": "viewItem == sectionItem",
 					"group": "inline@2"
+				},
+				{
+					"command": "infocus.todoist.removeSection",
+					"when": "viewItem == sectionItem",
+					"group": "inline@0"
 				}
 			],
 			"touchBar": [

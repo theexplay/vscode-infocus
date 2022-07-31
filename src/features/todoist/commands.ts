@@ -2,13 +2,12 @@ import * as schedule from 'node-schedule';
 import { format, isPast, isToday } from 'date-fns';
 import { commands, env, ExtensionContext, ProgressLocation, ProgressOptions, QuickPickItem, Uri, window } from "vscode";
 import { TaskItem } from "./providers/TaskItem";
-import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx, addSectionFx, UPCOMING_PROJECT, TODAY_PROJECT, MISSING_PROJECT } from "./models";
+import { $projects, $projectsMap, addTaskFx, syncFx, completeTaskFx, updateTaskFx, uncompleteTaskFx, updateSectionFx, $projectsProviderMap, $tasks, updateProjectFx, addSectionFx, UPCOMING_PROJECT, TODAY_PROJECT, MISSING_PROJECT, removeSectionFx } from "./models";
 import { ProjectItem } from "./providers/ProjectItem";
 import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
 import { SectionItem } from "./providers/SectionItem";
 import { Task } from './entities';
-import { stringify } from 'querystring';
 import { DueDate } from 'todoist/dist/v8-types';
 
 export function registerTodoistCommands(context: ExtensionContext) {
@@ -24,6 +23,7 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.openTaskInBrowser', openInBrowser),
     commands.registerCommand('infocus.todoist.refresh', refresh),
     commands.registerCommand('infocus.todoist.sectionRename', sectionRename),
+    commands.registerCommand('infocus.todoist.removeSection', removeSection),
     commands.registerCommand('infocus.todoist.sectionAddTask', sectionAddTask),
     commands.registerCommand('infocus.todoist.openTextDocument', openTextDocument),
     commands.registerCommand('infocus.todoist.projectRename', projectRename),
@@ -175,6 +175,25 @@ async function refresh(): Promise<void> {
     progressOptions,
     syncFx()
   );
+}
+
+async function removeSection(section: SectionItem): Promise<void> {
+  const YES_NO = (await window.showWarningMessage(
+    `Do you really want to remove section '${section._raw.name}' with all tasks?`,
+    {
+      modal: true
+    },
+    'Yes', 'No'
+  )) as 'Yes' | 'No' | undefined;
+
+  if (YES_NO === 'Yes') {
+    await withAsyncProgress(
+      progressOptions,
+      removeSectionFx({
+        id: section._raw.id,
+      })
+    );
+  }
 }
 
 async function sectionRename(section: SectionItem) {

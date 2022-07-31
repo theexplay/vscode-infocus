@@ -1,5 +1,5 @@
 import { createEffect, createEvent, createStore, merge } from "effector";
-import { SectionAdd, SectionUpdate } from "todoist/dist/v8-types";
+import { SectionAdd, SectionDelete, SectionUpdate } from "todoist/dist/v8-types";
 import { Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
 import { Section } from "../entities";
@@ -7,6 +7,8 @@ import { SectionItem } from "../providers/SectionItem";
 import { syncFx } from "./common";
 
 export const updateSectionFx = createEffect(async (section: SectionUpdate) => todoistApi.sections.update(section));
+
+export const removeSectionFx = createEffect(async (section: SectionDelete) => todoistApi.sections.delete(section));
 
 export const addSectionFx = createEffect(async (section: SectionAdd) => todoistApi.sections.add(section));
 
@@ -30,6 +32,7 @@ $sections
 merge([
     updateSectionFx.done,
     addSectionFx.done,
+    removeSectionFx.done,
 ]).watch(async () => {
     await syncFx();
 });

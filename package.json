@@ -2,7 +2,7 @@
 	"name": "vscode-infocus",
 	"displayName": "VSCode InFocus",
 	"description": "",
-	"version": "0.4.0",
+	"version": "0.5.1",
 	"engines": {
 		"vscode": "^1.62.0"
 	},
@@ -342,6 +342,6 @@
 		"date-fns": "^2.29.1",
 		"effector": "^22.1.2",
 		"node-schedule": "^2.1.0",
-		"todoist": "^0.5.1"
+		"todoist": "^1.0.3"
 	}
 }

@@ -8,7 +8,7 @@ export enum TaskIcon {
     Uncompleted = 'circle-large-outline',
 }
 
-export const getTaskIcon = (completed: number) => new ThemeIcon(!!completed ? TaskIcon.Completed : TaskIcon.Uncompleted);
+export const getTaskIcon = (completed: boolean) => new ThemeIcon(completed ? TaskIcon.Completed : TaskIcon.Uncompleted);
 
 const URI_REGEX = /\[([^\[]+)\]\((.*)\)/gm;
 
@@ -19,7 +19,7 @@ export class TaskItem extends TreeItem {
     parentId?: Id;
     projectId: Id;
     sectionId: Id;
-    completed: number;
+    completed: boolean;
     children: WithChildren<TaskItem>[] = [];
     link?: string;
 
@@ -57,12 +57,14 @@ export class TaskItem extends TreeItem {
             this.contextValue += ',taskItem-hasLink';
             this.tooltip = task.content;
 
-            const label = task.content.replace(fullmatch, text);
-            const index = label.indexOf(text);
-            this.label = {
-                label,
-                highlights: [[index, index + text.length]]
-            };
+            if (fullmatch) {
+                const label = task.content.replace(fullmatch, text);
+                const index = label.indexOf(text);
+                this.label = {
+                    label,
+                    highlights: [[index, index + text.length]]
+                };
+            }
         }
     }
 

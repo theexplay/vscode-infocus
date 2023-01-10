@@ -4,6 +4,10 @@ All notable changes to the "vscode-infocus" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.5.0]
+Fix:
+- Migration to new todoist API
+
 ## [0.4.0]
 New feature:
 - Added action button to remove section

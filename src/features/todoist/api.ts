@@ -1,4 +1,4 @@
-import { v8 as TodoistApi } from 'todoist';
+import { v9 as TodoistApi } from 'todoist';
 import { Integration } from "../../lib/constants";
 import { getApiToken } from "../../lib/tokenService";
 

@@ -1,5 +1,5 @@
 import { createEffect, createEvent, createStore, merge } from "effector";
-import { SectionAdd, SectionDelete, SectionUpdate } from "todoist/dist/v8-types";
+import { SectionAdd, SectionDelete, SectionUpdate } from "todoist/dist/v9-types";
 import { Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
 import { Section } from "../entities";

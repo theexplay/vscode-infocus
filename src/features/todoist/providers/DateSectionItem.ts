@@ -1,4 +1,4 @@
-import { DueDate } from "todoist/dist/v8-types";
+import { DueDate } from "todoist/dist/v9-types";
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from "vscode";
 
 

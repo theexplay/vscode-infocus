@@ -14,7 +14,7 @@ export async function activate(context: ExtensionContext) {
         todoistDeactivate();
         todoistInitialize();
     });
-    
+
     registerTreeProvider({
         name: `${ExtensionName}.${Integration.todoist}.${View.TreeView}`,
         provider: new TodoistTreeView(context)
@@ -42,7 +42,7 @@ function registerTreeProvider<T>({ name, provider }: registerProviderOptions<T>)
 
 async function initialize() {
     // todo persist state
-    todoistInitialize();    
+    todoistInitialize();
 }
 
 export function deactivate() {

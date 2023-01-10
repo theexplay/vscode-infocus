@@ -1,7 +1,7 @@
-import { TodoistV8Types } from "todoist";
+import { TodoistV9Types } from "todoist";
 
-export type Project = TodoistV8Types.Project;
+export type Project = TodoistV9Types.Project;
 
-export type Task = TodoistV8Types.Item;
+export type Task = TodoistV9Types.Item;
 
-export type Section = TodoistV8Types.Section;
+export type Section = TodoistV9Types.Section;

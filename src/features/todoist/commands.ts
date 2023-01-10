@@ -8,7 +8,7 @@ import { Id } from "../../lib/listToTree";
 import { withAsyncProgress } from "../../lib/withAsyncProgress";
 import { SectionItem } from "./providers/SectionItem";
 import { Task } from './entities';
-import { DueDate } from 'todoist/dist/v8-types';
+import { DueDate } from 'todoist/dist/v9-types';
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
@@ -268,7 +268,7 @@ async function openTextDocument(uri: Uri) {
 
 function tasksDateObserver() {
   // Map of tasks id which was already shown to user
-  const notifiedTasks: Record<number, boolean> = {};
+  const notifiedTasks: Record<string, boolean> = {};
   // Watch sync status, cause at first persist state from global storage,
   // it may be outdated or changed after new sync
   syncFx.done.watch(() => {

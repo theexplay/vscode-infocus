@@ -1,4 +1,4 @@
-import { TodoistV8Types } from "todoist";
+import { TodoistV9Types } from "todoist";
 import { createEffect, createEvent, createStore, merge } from "effector";
 import { Task } from "../entities";
 import { listToTree, Id } from "../../../lib/listToTree";
@@ -12,9 +12,9 @@ export const completeTaskFx = createEffect(async ({ id }: Task) => todoistApi.it
 
 export const uncompleteTaskFx = createEffect(async ({ id }: Task) => todoistApi.items.uncomplete({ id }));
 
-export const addTaskFx = createEffect(async (task: TodoistV8Types.ItemAdd) => todoistApi.items.add(task));
+export const addTaskFx = createEffect(async (task: TodoistV9Types.ItemAdd) => todoistApi.items.add(task));
 
-export const updateTaskFx = createEffect(async (task: TodoistV8Types.ItemUpdate) => todoistApi.items.update(task));
+export const updateTaskFx = createEffect(async (task: TodoistV9Types.ItemUpdate) => todoistApi.items.update(task));
 
 /** Events */
 export const updateTasks = createEvent<Task[]>();

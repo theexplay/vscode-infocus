@@ -1,5 +1,5 @@
 import { combine, createEffect, createEvent, createStore, merge } from "effector";
-import { ProjectUpdate } from "todoist/dist/v8-types";
+import { ProjectUpdate } from "todoist/dist/v9-types";
 import { Id } from "../../../lib/listToTree";
 import { todoistApi } from "../api";
 import { Project } from "../entities";
@@ -28,7 +28,7 @@ export const $projectsMap = $projects.map((projects) => projects.reduce<Record<I
     [project.id]: project
 }), {}));
 
-export const projectHasAnyItems = (projectId: number) => combine(
+export const projectHasAnyItems = (projectId: string) => combine(
     $tasks,
     $sections,
     (tasks, sections) => [...tasks, ...sections].some(({ project_id }) => project_id === projectId)

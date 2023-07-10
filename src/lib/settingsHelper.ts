@@ -17,5 +17,9 @@ export class SettingsHelper {
     static isCodeLensEnabled(): boolean {
         return workspace.getConfiguration(ExtensionName).get('todoist.enableCodeLens', true);
     }
+
+    static getReminderNotificationsMode(): 'all' | 'missed' | 'todays' | 'disabled' {
+        return workspace.getConfiguration(ExtensionName).get('todoist.notification', 'all');
+    }
 }
 

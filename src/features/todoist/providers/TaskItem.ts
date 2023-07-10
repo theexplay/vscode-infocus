@@ -37,16 +37,18 @@ export class TaskItem extends TreeItem {
         this.completed = task.checked;
         this.children = task.children.map((task) => new TaskItem(task));
 
-        const match = task.content.match(/(vscode:\/\/\S*)/gmi);
+        const match = (new RegExp(/(vscode:\/\/\S*\d)\)?$/gm)).exec(task.content) ?? [];
 
-        if (match) {
-            const [url] = match;
+        if (match?.length) {
+            const [, url] = match;
 
-            this.command = {
-                title: 'open file',
-                command: 'infocus.todoist.openTextDocument',
-                arguments: [url]
-            };
+            if (url) {
+                this.command = {
+                    title: 'open file',
+                    command: 'infocus.todoist.openTextDocument',
+                    arguments: [url]
+                };
+            }
         }
 
         // Create new instance of regex, cause of lastIndex position

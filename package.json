@@ -39,7 +39,7 @@
 			{
 				"view": "infocus.todoist.TreeView",
 				"contents": "Data is loading, be patience.\n ------ \n Click refresh in toolbar to resync.",
-				"when": "!!config.infocus.todoist.token"
+				"when": "config.infocus.todoist.token"
 			},
 			{
 				"view": "infocus.todoist.TreeView",
@@ -287,6 +287,23 @@
 		"configuration": {
 			"title": "InFocus",
 			"properties": {
+				"infocus.todoist.notifications": {
+					"type": "string",
+					"enum": [
+						"all",
+						"missed",
+						"todays",
+						"disabled"
+					],
+					"enumDescriptions": [
+						"All reminder notifications will be shown",
+						"Only missed tasks will shown in notifications",
+						"Only todays dedline tasks will shown in notifications",
+						"All reminder notifications disabled"
+					],
+					"default": "all",
+					"description": "Notifications mode"
+				},
 				"infocus.todoist.token": {
 					"type": "string",
 					"description": "Your todoist API token. See https://todoist.com/app/settings/integrations"

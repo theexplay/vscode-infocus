@@ -9,6 +9,7 @@ import { withAsyncProgress } from "../../lib/withAsyncProgress";
 import { SectionItem } from "./providers/SectionItem";
 import { Task } from './entities';
 import { DueDate } from 'todoist/dist/v9-types';
+import { SettingsHelper } from '../../lib/settingsHelper';
 
 export function registerTodoistCommands(context: ExtensionContext) {
   context.subscriptions.push(
@@ -277,18 +278,30 @@ function tasksDateObserver() {
     // @ts-ignore
     schedule.gracefulShutdown();
 
+    const notificationType = SettingsHelper.getReminderNotificationsMode();
+    const allAndMissedNotifications: (typeof notificationType)[] = ['all', 'missed'];
+    const allAndTodayNotifications: (typeof notificationType)[] = ['all', 'todays'];
+
+    if (notificationType === 'disabled') {
+      return;
+    }
+
     if (tasks.length) {
       tasks.forEach(async (task) => {
         if (task?.due?.date && !task.checked) {
           const taskDate = new Date(task.due.date);
 
           if (!notifiedTasks[task.id]) {
-            if (isToday(taskDate)) {
-              schedule.scheduleJob(taskDate, async () => {
-                showMessageWithSheduleAction(task, `Task due now: ${task.content}`);
-              });
-            } else if (isPast(taskDate)) {
-              showMessageWithSheduleAction(task, `You missed due date. Task: ${task.content}`);
+            if (isPast(taskDate)) {
+              if (allAndMissedNotifications.includes(notificationType)) {
+                showMessageWithSheduleAction(task, `You missed due date. Task: ${task.content}`);
+              }
+            } else if (isToday(taskDate)) {
+              if (allAndTodayNotifications.includes(notificationType)) {
+                schedule.scheduleJob(taskDate, async () => {
+                  showMessageWithSheduleAction(task, `Today's Deadline: ${task.content}`);
+                });
+              }
             }
 
             notifiedTasks[task.id] = true;

@@ -16,7 +16,7 @@ export function todoistInitialize() {
                 {
                     location: ProgressLocation.Notification,
                     title: "Syncing with Todoist",
-                    cancellable: false
+                    cancellable: true
                 },
                 syncFx()
             );

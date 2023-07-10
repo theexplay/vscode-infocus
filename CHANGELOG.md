@@ -4,6 +4,14 @@ All notable changes to the "vscode-infocus" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.6.0]
+Fix:
+- Infinite notification about sync
+
+Feat:
+- added notification system
+- new links to vscode path in md format
+
 ## [0.5.0]
 Fix:
 - Migration to new todoist API

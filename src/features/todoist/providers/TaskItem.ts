@@ -1,14 +1,21 @@
 import { TreeItem, TreeItemCollapsibleState, ThemeIcon, Uri } from "vscode";
-import { Task } from "../entities";
-import { Id } from "../../../lib/listToTree";
-import { WithChildren } from "../../../lib/types";
+import type { Task } from "../entities";
+import type { Id } from "../../../lib/listToTree";
+import type { WithChildren } from "../../../lib/types";
 
 export enum TaskIcon {
     Completed = 'pass-filled',
     Uncompleted = 'circle-large-outline',
+    UncompletableTask = 'root-folder',
 }
 
-export const getTaskIcon = (completed: boolean) => new ThemeIcon(completed ? TaskIcon.Completed : TaskIcon.Uncompleted);
+export const getTaskIcon = (completed: boolean, isUncompletable: boolean) => {
+    if (isUncompletable) {
+        return new ThemeIcon(TaskIcon.UncompletableTask);
+    }
+
+    return new ThemeIcon(completed ? TaskIcon.Completed : TaskIcon.Uncompleted);
+};
 
 const URI_REGEX = /\[([^\[]+)\]\((.*)\)/gm;
 
@@ -22,20 +29,26 @@ export class TaskItem extends TreeItem {
     completed: boolean;
     children: WithChildren<TaskItem>[] = [];
     link?: string;
+    treeDepthLevel: number;
+
+    isUncompletable: boolean;
 
     constructor(
-        task: WithChildren<Task>
+        task: WithChildren<Task>,
+        level: number = 0
     ) {
         super(task.content, task.children.length ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None);
 
         this._raw = task;
-        this.iconPath = getTaskIcon(task.checked);
+        this.isUncompletable = /^\*\s.+/.test(task.content);
+        this.iconPath = getTaskIcon(task.checked, this.isUncompletable);
         this.id = `${String(task.id)}_${Math.floor(Math.random() * 1000)}`;
         this.parentId = task.parent_id;
         this.projectId = task.project_id;
         this.sectionId = task.section_id;
         this.completed = task.checked;
-        this.children = task.children.map((task) => new TaskItem(task));
+        this.children = task.children.map((task) => new TaskItem(task, level + 1));
+        this.treeDepthLevel = level;
 
         const match = (new RegExp(/(vscode:\/\/\S*\d)\)?$/gm)).exec(task.content) ?? [];
 
@@ -49,6 +62,11 @@ export class TaskItem extends TreeItem {
                     arguments: [url]
                 };
             }
+        }
+
+        const MAX_DEPTH_LEVEL_SUBTASKS = 4;
+        if (this.treeDepthLevel < MAX_DEPTH_LEVEL_SUBTASKS) {
+            this.contextValue += ',taskItem-addSubTask';
         }
 
         // Create new instance of regex, cause of lastIndex position
@@ -67,6 +85,10 @@ export class TaskItem extends TreeItem {
                     highlights: [[index, index + text.length]]
                 };
             }
+        }
+
+        if (this.isUncompletable) {
+            this.contextValue = 'taskUncompletable';
         }
     }
 

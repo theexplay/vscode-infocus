@@ -2,7 +2,7 @@
 	"name": "vscode-infocus",
 	"displayName": "VSCode InFocus",
 	"description": "",
-	"version": "0.6.0",
+	"version": "0.7.0",
 	"engines": {
 		"vscode": "^1.62.0"
 	},
@@ -77,6 +77,12 @@
 				"title": "Edit Task",
 				"category": "InFocus",
 				"icon": "$(edit)"
+			},
+			{
+				"command": "infocus.todoist.addSubTask",
+				"title": "Add SubTask",
+				"category": "InFocus",
+				"icon": "$(plus)"
 			},
 			{
 				"command": "infocus.todoist.copyTask",
@@ -197,6 +203,10 @@
 					"when": "false"
 				},
 				{
+					"command": "infocus.todoist.addSubTask",
+					"when": "false"
+				},
+				{
 					"command": "infocus.todoist.copyTask",
 					"when": "false"
 				},
@@ -243,14 +253,19 @@
 					"when": "viewItem =~ /taskItem/"
 				},
 				{
+					"command": "infocus.todoist.addSubTask",
+					"group": "inline@4",
+					"when": "viewItem =~ /taskUncompletable|taskItem-addSubTask/"
+				},
+				{
 					"command": "infocus.todoist.editTask",
 					"group": "inline@2",
-					"when": "viewItem =~ /taskItem/"
+					"when": "viewItem =~ /taskItem|taskUncompletable/"
 				},
 				{
 					"command": "infocus.todoist.copyTask",
 					"group": "inline@2",
-					"when": "viewItem =~ /taskItem/"
+					"when": "viewItem =~ /taskItem|taskUncompletable/"
 				},
 				{
 					"command": "infocus.todoist.openTaskInBrowser",

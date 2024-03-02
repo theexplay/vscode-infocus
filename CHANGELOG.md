@@ -5,6 +5,11 @@ All notable changes to the "vscode-infocus" extension will be documented in this
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [0.6.0]
+Feat:
+- added ability to add sub-tasks
+- view for uncompletable tasks
+
+## [0.6.0]
 Fix:
 - Infinite notification about sync
 

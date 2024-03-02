@@ -19,6 +19,7 @@ export function registerTodoistCommands(context: ExtensionContext) {
     commands.registerCommand('infocus.todoist.toggleTask', toggleTask),
     commands.registerCommand('infocus.todoist.openLinkFromTask', openLinkFromTask),
     commands.registerCommand('infocus.todoist.editTask', editTask),
+    commands.registerCommand('infocus.todoist.addSubTask', addSubTask),
     commands.registerCommand('infocus.todoist.copyTask', copyTask),
     commands.registerCommand('infocus.todoist.addTask', addTask),
     commands.registerCommand('infocus.todoist.openTaskInBrowser', openInBrowser),
@@ -58,6 +59,26 @@ async function toggleTask(task: TaskItem): Promise<void> {
       );
     }
   }, 400);
+}
+
+async function addSubTask(task: TaskItem) {
+  const { content, id } = task._raw;
+
+  const newContent = await window.showInputBox({
+    title: `Add sub-task to "${content}":`,
+    value: '',
+  });
+
+
+  if (newContent) {
+    await withAsyncProgress(
+      progressOptions,
+      addTaskFx({
+        content: newContent,
+        parent_id: id
+      })
+    );
+  }
 }
 
 async function editTask(task: TaskItem): Promise<void> {
